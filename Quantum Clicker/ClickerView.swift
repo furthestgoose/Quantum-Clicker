@@ -13,7 +13,7 @@ struct ClickerView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                TopBar(resource: gameState.resources[0])
+                TopBar(gameState: gameState, resource: gameState.resources[0])
                 
                 TappableArea(perClick: gameState.resources[0].perClick) {
                     gameState.click()
@@ -27,21 +27,22 @@ struct ClickerView: View {
 }
 
 struct TopBar: View {
+    @ObservedObject var gameState: GameState
     let resource: Resource
     
     var body: some View {
         VStack {
-            Image(systemName: "desktopcomputer")
+            Image(systemName: "display")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 200, height: 200)
                 .foregroundColor(.white)
                 .overlay(
                     VStack {
-                        Text("\(Int(resource.amount)) \(Int(resource.amount) == 1 ? "bit" : "bits")")
+                        Text("\(gameState.formatNumber(resource.amount)) \(Int(resource.amount) == 1 ? "bit" : "bits")")
                             .font(.headline)
                             .foregroundColor(.white)
-                        Text("\(String(format: "%.2f", resource.perSecond))/s")
+                        Text("\(gameState.formatNumber(resource.perSecond))/s")
                             .font(.subheadline)
                             .foregroundColor(.white)
                     }
@@ -88,7 +89,7 @@ struct TappableArea: View {
                         .resizable()
                         .frame(width: 100, height: 100)
                         .foregroundColor(.black)
-                    Text("Click here to earn \(Int(perClick)) \(Int(perClick) == 1 ? "bit" : "bits")")
+                    Text("Click here to earn \(String(format: "%.2f", perClick)) \(perClick == 1 ? "bit" : "bits")")
                         .foregroundColor(.black)
                         .font(.headline)
                 }

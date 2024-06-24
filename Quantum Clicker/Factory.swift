@@ -9,9 +9,10 @@ import Foundation
 
 struct Factory: Identifiable {
     let id = UUID()
+    let icon: String
     let name: String
     var cost: Double
     var count: Int = 0
     let effect: (GameState) -> Void
-    let description: String
+    var description: String
 }

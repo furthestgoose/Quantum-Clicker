@@ -12,14 +12,9 @@ struct ContentView: View {
                     Label("Clicker", systemImage: "hand.tap.fill")
                 }
             
-            UpgradesView(gameState: gameState)
+            StoreView(gameState: gameState)
                 .tabItem {
-                    Label("Upgrades", systemImage: "arrow.up.circle.fill")
-                }
-            
-            FactoriesView(gameState: gameState)
-                .tabItem {
-                    Label("Factories", systemImage: "building.2.fill")
+                    Label("Store", systemImage: "storefront.fill")
                 }
             
             StatsView(gameState: gameState)
