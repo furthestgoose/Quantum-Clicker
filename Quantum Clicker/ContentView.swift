@@ -1,35 +1,55 @@
 import SwiftUI
-
+import SwiftData
 
 struct ContentView: View {
-    @StateObject private var gameState = GameState()
+    @Environment(\.modelContext) private var modelContext
+    @Query private var gameStateModels: [GameStateModel]
+    @State private var gameState: GameState?
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     
     var body: some View {
-        TabView {
-            ClickerView(gameState: gameState)
-                .tabItem {
-                    Label("Clicker", systemImage: "hand.tap.fill")
+        Group {
+            if let gameState = gameState {
+                TabView {
+                    ClickerView(gameState: gameState)
+                        .tabItem {
+                            Label("Clicker", systemImage: "hand.tap.fill")
+                        }
+                    
+                    StoreView(gameState: gameState)
+                        .tabItem {
+                            Label("Store", systemImage: "storefront.fill")
+                        }
+                    
+                    StatsView(gameState: gameState)
+                        .tabItem {
+                            Label("Stats", systemImage: "chart.bar.fill")
+                        }
                 }
-            
-            StoreView(gameState: gameState)
-                .tabItem {
-                    Label("Store", systemImage: "storefront.fill")
+                .onReceive(timer) { _ in
+                    gameState.update()
+                    try? modelContext.save()
                 }
-            
-            StatsView(gameState: gameState)
-                .tabItem {
-                    Label("Stats", systemImage: "chart.bar.fill")
-                }
+            } else {
+                ProgressView()
+            }
         }
-        .onReceive(timer) { _ in
-            gameState.update()
+        .onAppear {
+            if gameState == nil {
+                let gameStateModel: GameStateModel
+                if let existingModel = gameStateModels.first {
+                    gameStateModel = existingModel
+                } else {
+                    gameStateModel = GameStateModel()
+                    modelContext.insert(gameStateModel)
+                }
+                gameState = GameState(model: gameStateModel)
+            }
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
+#Preview {
+    ContentView()
+        .modelContainer(for: GameStateModel.self, inMemory: true)
 }

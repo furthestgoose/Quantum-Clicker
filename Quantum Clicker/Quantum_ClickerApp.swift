@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Quantum_ClickerApp: App {
@@ -13,5 +14,6 @@ struct Quantum_ClickerApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: GameStateModel.self)
     }
 }

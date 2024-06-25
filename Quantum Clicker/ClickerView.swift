@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ClickerView: View {
     @ObservedObject var gameState: GameState
@@ -13,9 +14,11 @@ struct ClickerView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                TopBar(gameState: gameState, resource: gameState.resources[0])
+                if let bitsResource = gameState.model.resources.first(where: { $0.name == "Bits" }) {
+                    TopBar(gameState: gameState, resource: bitsResource)
+                }
                 
-                TappableArea(perClick: gameState.resources[0].perClick) {
+                TappableArea(perClick: gameState.model.resources.first(where: { $0.name == "Bits" })?.perClick ?? 0.1) {
                     gameState.click()
                 }
             }
@@ -28,8 +31,7 @@ struct ClickerView: View {
 
 struct TopBar: View {
     @ObservedObject var gameState: GameState
-    let resource: Resource
-    
+    let resource: ResourceModel
     var body: some View {
         VStack {
             Image(systemName: "display")
@@ -39,14 +41,14 @@ struct TopBar: View {
                 .foregroundColor(.white)
                 .overlay(
                     VStack {
-                        Text("\(gameState.formatNumber(resource.amount)) \(Int(resource.amount) == 1 ? "bit" : "bits")")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                        Text("\(gameState.formatNumber(resource.perSecond))/s")
-                            .font(.subheadline)
-                            .foregroundColor(.white)
+                            Text("\(gameState.formatNumber(resource.amount)) \(Int(resource.amount) == 1 ? "bit" : "bits")")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                            Text("\(gameState.formatNumber(resource.perSecond))/s")
+                                .font(.subheadline)
+                                .foregroundColor(.white)
                     }
-                        .padding(.bottom, 30)
+                    .padding(.bottom, 30)
                 )
         }
         .padding(.top, 30)

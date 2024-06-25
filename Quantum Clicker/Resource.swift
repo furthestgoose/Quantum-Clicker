@@ -6,11 +6,21 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Resource: Identifiable {
-    let id = UUID()
-    let name: String
+@Model
+class ResourceModel: Identifiable{
+    let id: UUID
+    var name: String
     var amount: Double
     var perClick: Double
     var perSecond: Double
+    
+    init(id: UUID = UUID(), name: String, amount: Double, perClick: Double, perSecond: Double) {
+        self.id = id
+        self.name = name
+        self.amount = amount
+        self.perClick = perClick
+        self.perSecond = perSecond
+    }
 }
