@@ -5,7 +5,7 @@ struct StatsView: View {
     @ObservedObject var gameState: GameState
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     if let bitsResource = gameState.model.resources.first(where: { $0.name == "Bits" }) {

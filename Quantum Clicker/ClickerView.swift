@@ -12,7 +12,7 @@ struct ClickerView: View {
     @ObservedObject var gameState: GameState
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 if let bitsResource = gameState.model.resources.first(where: { $0.name == "Bits" }) {
                     TopBar(gameState: gameState, resource: bitsResource)
