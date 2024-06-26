@@ -17,12 +17,12 @@ class FactoryModel: Identifiable{
     var count: Int
     var OverView: String
     
-    init(id: UUID = UUID(), icon: String, name: String, cost: Double, count: Int, description: String) {
+    init(id: UUID = UUID(), icon: String, name: String, cost: Double, count: Int, OverView: String) {
         self.id = id
         self.icon = icon
         self.name = name
         self.cost = cost
         self.count = count
-        self.OverView = description
+        self.OverView = OverView
     }
 }

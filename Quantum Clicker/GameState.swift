@@ -10,6 +10,10 @@ class GameStateModel: Identifiable{
     var cpuUpgradeBought: Bool
     var coolingUpgradeBought: Bool
     var storageUpgradeBought: Bool
+    var workstationCPUUpgradeBought: Bool
+    var workstationRAMUpgradeBought: Bool
+    var workstationGPUUpgradeBought: Bool
+    var workstationNetworkUpgradeBought: Bool
     
     @Relationship(deleteRule: .cascade) var resources: [ResourceModel]
     @Relationship(deleteRule: .cascade) var upgrades: [UpgradeModel]
@@ -17,7 +21,8 @@ class GameStateModel: Identifiable{
     
     init(id: UUID = UUID(), quantumUnlocked: Bool = false, personalComputerUnlocked: Bool = false,
          ramUpgradeBought: Bool = false, cpuUpgradeBought: Bool = false, coolingUpgradeBought: Bool = false,
-         storageUpgradeBought: Bool = false) {
+         storageUpgradeBought: Bool = false, workstationCPUUpgradeBought: Bool = false, workstationRAMUpgradeBought: Bool = false,
+         workstationGPUUpgradeBought: Bool = false, workstationNetworkUpgradeBought: Bool = false) {
         self.id = id
         self.quantumUnlocked = quantumUnlocked
         self.personalComputerUnlocked = personalComputerUnlocked
@@ -25,6 +30,10 @@ class GameStateModel: Identifiable{
         self.cpuUpgradeBought = cpuUpgradeBought
         self.coolingUpgradeBought = coolingUpgradeBought
         self.storageUpgradeBought = storageUpgradeBought
+        self.workstationCPUUpgradeBought = workstationCPUUpgradeBought
+        self.workstationRAMUpgradeBought = workstationRAMUpgradeBought
+        self.workstationGPUUpgradeBought = workstationGPUUpgradeBought
+        self.workstationNetworkUpgradeBought = workstationNetworkUpgradeBought
         self.resources = []
         self.upgrades = []
         self.factories = []
@@ -85,20 +94,30 @@ class GameState: ObservableObject {
             UpgradeModel(icon: "cursorarrow.motionlines", name: "Quantum Clicker", cost: 4999.9, description: "Each click has a small chance to produce a qubit"),
             UpgradeModel(icon: "apple.terminal", name: "Automated Clicking Software", cost: 9999.9, description: "Increase the autoclicker speed to 0.2 bits per second"),
             UpgradeModel(icon: "network", name: "Network Clicks", cost: 49999.9, description: "Each click generates bits for every connected device, increasing bits per click by 0.5"),
-            UpgradeModel(icon: "memorychip", name: "Ram Upgrade", cost: 9.9, description: "Faster RAM is installed \nPersonal Computers are 2x faster"),
+            UpgradeModel(icon: "memorychip", name: "RAM Upgrade", cost: 9.9, description: "Faster RAM is installed \nPersonal Computers are 2x faster"),
             UpgradeModel(icon: "cpu", name: "CPU Upgrade", cost: 49.9, description: "The CPU is upgraded \nPersonal Computers are 2.5x faster"),
             UpgradeModel(icon: "fan", name: "Cooling System Upgrade", cost: 149.9, description: "The Cooling System is upgraded \nPersonal Computers are 1.5x faster"),
-            UpgradeModel(icon: "externaldrive", name: "Storage Upgrade", cost: 999.9, description: "The Storage is upgraded \nPersonal Computers are 1.8x faster")
+            UpgradeModel(icon: "externaldrive", name: "Storage Upgrade", cost: 999.9, description: "The Storage is upgraded \nPersonal Computers are 1.8x faster"),
+            UpgradeModel(icon: "clock.arrow.circlepath", name: "Processor Overclock", cost: 499.9, description: "Enhanced CPU performance \nWorkstations are 2x faster"),
+            UpgradeModel(icon: "memorychip", name: "RAM Expansion", cost: 1999.9, description: "Increased memory capacity \nWorkstations are 2.5x faster"),
+            UpgradeModel(icon: "gamecontroller", name: "Graphics Accelerator", cost: 4999.9, description: "Advanced GPU for improved processing \nWorkstations are 1.5x"),
+            UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 9999.9, description: "Improved data transfer capabilities \nWorkstations are 1.8x faster")
         ]
         
     }
     
     private func initializeFactories() {
         model.factories = [
-            FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, count: 0, description: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
-            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 50, count: 0, description: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
-            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 200, count: 0, description: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
-            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 1000, count: 0, description: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second")
+            FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
+            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 50, count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
+            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 200, count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
+            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 1000, count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
+            FactoryModel(icon: "network", name: "Server Farm", cost: 5000, count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
+            FactoryModel(icon: "cpu", name: "Mainframe", cost: 25000, count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
+            FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 100000, count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
+            FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 500000, count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
+            FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000, count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
+            FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 10000000, count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second")
         ]
     }
     
@@ -106,9 +125,29 @@ class GameState: ObservableObject {
         model.factories.first { $0.name == "Personal Computer" }?.count ?? 0
     }
     
+    var workstationCount: Int {
+        model.factories.first { $0.name == "Workstation" }?.count ?? 0
+    }
+    
     func updatePersonalComputerOutput(multiplier: Double) {
         if let index = model.factories.firstIndex(where: { $0.name == "Personal Computer" }) {
             let baseOutput = 0.1
+            let outputPerUnit = baseOutput * multiplier
+            let totalOutput = outputPerUnit * Double(model.factories[index].count)
+            
+            if let resourceIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                model.resources[resourceIndex].perSecond = model.resources[resourceIndex].perSecond
+                    - (baseOutput * Double(model.factories[index].count))
+                    + totalOutput
+            }
+            
+            model.factories[index].OverView = "Generate \(outputPerUnit) bits per second"
+        }
+    }
+    
+    func updateWorkstation(multiplier: Double){
+        if let index = model.factories.firstIndex(where: { $0.name == "Workstation" }) {
+            let baseOutput = 0.5
             let outputPerUnit = baseOutput * multiplier
             let totalOutput = outputPerUnit * Double(model.factories[index].count)
             
@@ -195,7 +234,7 @@ class GameState: ObservableObject {
             if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
                 model.resources[bitsIndex].perClick += 0.5
             }
-        case "Ram Upgrade":
+        case "RAM Upgrade":
             model.ramUpgradeBought = true
             updatePersonalComputerOutput(multiplier: 2.0)
         case "CPU Upgrade":
@@ -207,6 +246,18 @@ class GameState: ObservableObject {
         case "Storage Upgrade":
             model.storageUpgradeBought = true
             updatePersonalComputerOutput(multiplier: 13.5)
+        case "Processor Overclock":
+            model.workstationCPUUpgradeBought = true
+            updateWorkstation(multiplier: 2)
+        case "RAM Expansion":
+            model.workstationRAMUpgradeBought = true
+            updateWorkstation(multiplier: 5)
+        case "Graphics Accelerator":
+            model.workstationGPUUpgradeBought = true
+            updateWorkstation(multiplier: 7.5)
+        case "High-Speed Network Interface":
+            model.workstationNetworkUpgradeBought = true
+            updateWorkstation(multiplier: 13.5)
         default:
             break
         }
@@ -247,11 +298,35 @@ class GameState: ObservableObject {
                 model.resources[bitsIndex].perSecond += output
                 model.personalComputerUnlocked = true
             case "Workstation":
-                model.resources[bitsIndex].perSecond += 0.5
+                let output: Double
+                if model.workstationCPUUpgradeBought && model.workstationGPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationNetworkUpgradeBought {
+                    output = 6.75
+                } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationGPUUpgradeBought {
+                    output = 3.75
+                } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought {
+                    output = 2.5
+                } else if model.workstationCPUUpgradeBought {
+                    output = 1
+                } else {
+                    output = 0.5
+                }
+                model.resources[bitsIndex].perSecond += output
             case "Mini Server":
                 model.resources[bitsIndex].perSecond += 2
             case "Server Rack":
                 model.resources[bitsIndex].perSecond += 10
+            case "Server Farm":
+                model.resources[bitsIndex].perSecond += 50
+            case "Mainframe":
+                model.resources[bitsIndex].perSecond += 250
+            case "Vector Processor":
+                model.resources[bitsIndex].perSecond += 1000
+            case "Parallel Processing Array":
+                model.resources[bitsIndex].perSecond += 5000
+            case "Neural Network Computer":
+                model.resources[bitsIndex].perSecond += 20000
+            case "Supercomputer":
+                model.resources[bitsIndex].perSecond += 100000
             default:
                 break
             }

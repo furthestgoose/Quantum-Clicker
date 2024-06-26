@@ -46,7 +46,6 @@ struct FactoriesList: View {
 
     var body: some View {
         List {
-            // Sort factories by cost before iterating
             ForEach(gameState.model.factories.sorted(by: { $0.cost < $1.cost }), id: \.self) { factory in
                 if let index = gameState.model.factories.firstIndex(where: { $0.id == factory.id }) {
                     FactoryRow(gameState: gameState, factory: factory, index: index)
@@ -91,44 +90,45 @@ struct UpgradesList: View {
 
     var body: some View {
         List {
-            // Ensure the upgrades are displayed in the order they appear in the GameState model
-            ForEach(sortedUpgrades) { upgrade in
-                // Display only the non-personal computer upgrades
-                if upgrade.name != "Ram Upgrade" && upgrade.name != "CPU Upgrade" && upgrade.name != "Cooling System Upgrade" && upgrade.name != "Storage Upgrade" {
-                    UpgradeRow(upgrade: upgrade,
-                               canBuy: gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost) {
-                        gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
-                    }
-                } else {
-                    // Special handling for personal computer upgrades based on conditions
-                    if upgrade.name == "Ram Upgrade", gameState.model.personalComputerUnlocked {
-                        UpgradeRow(upgrade: upgrade,
-                                   canBuy: gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost) {
-                            gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
-                        }
-                    } else if upgrade.name == "CPU Upgrade", gameState.personalComputerCount >= 5 {
-                        UpgradeRow(upgrade: upgrade,
-                                   canBuy: gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost) {
-                            gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
-                        }
-                    } else if upgrade.name == "Cooling System Upgrade", gameState.personalComputerCount >= 10 {
-                        UpgradeRow(upgrade: upgrade,
-                                   canBuy: gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost) {
-                            gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
-                        }
-                    } else if upgrade.name == "Storage Upgrade", gameState.personalComputerCount >= 15 {
-                        UpgradeRow(upgrade: upgrade,
-                                   canBuy: gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost) {
-                            gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
-                        }
-                    }
+            ForEach(filteredUpgrades) { upgrade in
+                UpgradeRow(upgrade: upgrade,
+                           canBuy: canBuy(upgrade)) {
+                    gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
                 }
             }
         }
         .listStyle(PlainListStyle())
     }
-}
 
+    private var filteredUpgrades: [UpgradeModel] {
+            sortedUpgrades.filter { upgrade in
+                switch upgrade.name {
+                case "RAM Upgrade":
+                    return gameState.model.personalComputerUnlocked
+                case "CPU Upgrade":
+                    return gameState.personalComputerCount >= 5
+                case "Cooling System Upgrade":
+                    return gameState.personalComputerCount >= 10
+                case "Storage Upgrade":
+                    return gameState.personalComputerCount >= 15
+                case "Processor Overclock":
+                    return gameState.workstationCount >= 10
+                case "RAM Expansion":
+                    return gameState.workstationCount >= 25
+                case "Graphics Accelerator":
+                    return gameState.workstationCount >= 50
+                case "High-Speed Network Interface":
+                    return gameState.workstationCount >= 100
+                default:
+                    return true
+                }
+            }
+        }
+
+    private func canBuy(_ upgrade: UpgradeModel) -> Bool {
+        return gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost
+    }
+}
 
 struct UpgradeRow: View {
     let upgrade: UpgradeModel
@@ -147,6 +147,7 @@ struct UpgradeRow: View {
             Spacer()
             VStack{
                 Button("Buy", action: action)
+                    .buttonStyle(BorderlessButtonStyle())
                     .disabled(!canBuy)
                     .padding(.vertical, 5)
                     .padding(.horizontal, 10)
@@ -169,7 +170,7 @@ struct FactoryRow: View {
         @State private var quantity = 1
     
     var canBuy: Bool {
-            let totalCost = factory.cost * (1 - pow(1.5, Double(quantity))) / (1 - 1.5)
+            let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
             return gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= totalCost
         }
     
@@ -189,6 +190,7 @@ struct FactoryRow: View {
             Button("Buy") {
                 gameState.buyFactory(index, quantity: quantity)
             }
+            .buttonStyle(BorderlessButtonStyle())
             .disabled(!canBuy)
             .padding(.vertical, 5)
             .padding(.horizontal, 10)
@@ -196,7 +198,7 @@ struct FactoryRow: View {
             .foregroundColor(.white)
             .cornerRadius(5)
             
-            let totalCost = factory.cost * (1 - pow(1.5, Double(quantity))) / (1 - 1.5)
+            let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
             Text("\(Int(totalCost)) bits")
                 .font(.caption)
                 .foregroundColor(canBuy ? .blue : .gray)
