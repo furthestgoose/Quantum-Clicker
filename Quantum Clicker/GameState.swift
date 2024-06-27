@@ -79,7 +79,7 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 0, perClick: 0.1, perSecond: 0),
+            ResourceModel(name: "Bits", amount: 100000000, perClick: 0.1, perSecond: 0),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
     }
@@ -101,23 +101,24 @@ class GameState: ObservableObject {
             UpgradeModel(icon: "clock.arrow.circlepath", name: "Processor Overclock", cost: 499.9, description: "Enhanced CPU performance \nWorkstations are 2x faster"),
             UpgradeModel(icon: "memorychip", name: "RAM Expansion", cost: 1999.9, description: "Increased memory capacity \nWorkstations are 2.5x faster"),
             UpgradeModel(icon: "gamecontroller", name: "Graphics Accelerator", cost: 4999.9, description: "Advanced GPU for improved processing \nWorkstations are 1.5x"),
-            UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 9999.9, description: "Improved data transfer capabilities \nWorkstations are 1.8x faster")
+            UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 9999.9, description: "Improved data transfer capabilities \nWorkstations are 1.8x faster"),
+            UpgradeModel(icon: "testtube.2", name: "Quantum Research Lab", cost: 99999999.9, description: "Unlocks the Quantum Era")
         ]
         
     }
     
     private func initializeFactories() {
         model.factories = [
-            FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
-            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 50, count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
-            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 200, count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
-            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 1000, count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
-            FactoryModel(icon: "network", name: "Server Farm", cost: 5000, count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
-            FactoryModel(icon: "cpu", name: "Mainframe", cost: 25000, count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
-            FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 100000, count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
-            FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 500000, count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
-            FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000, count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
-            FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 10000000, count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second")
+            FactoryModel(icon: "pc", name: "Personal Computer", cost: 14.9, count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
+            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 49.9, count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
+            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 199.9, count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
+            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 999.9, count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
+            FactoryModel(icon: "cloud", name: "Server Farm", cost: 4999.9, count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
+            FactoryModel(icon: "cpu", name: "Mainframe", cost: 24999.9, count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
+            FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 99999.9, count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
+            FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 499999.9, count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
+            FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 1999999.9, count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
+            FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 9999999.9, count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second")
         ]
     }
     
@@ -201,6 +202,8 @@ class GameState: ObservableObject {
     
     private func applyUpgradeEffect(_ upgrade: UpgradeModel) {
         switch upgrade.name {
+        case "Quantum Research Lab":
+            model.quantumUnlocked = true
         case "Premium Licence":
             if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
                 model.resources[bitsIndex].perClick += 0.1
@@ -335,7 +338,7 @@ class GameState: ObservableObject {
     
     func update() {
         for i in 0..<model.resources.count {
-            model.resources[i].amount += model.resources[i].perSecond / 10
+            model.resources[i].amount += model.resources[i].perSecond
         }
     }
 }

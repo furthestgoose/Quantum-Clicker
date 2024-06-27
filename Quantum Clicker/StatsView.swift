@@ -9,10 +9,9 @@ struct StatsView: View {
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     if let bitsResource = gameState.model.resources.first(where: { $0.name == "Bits" }) {
-                        StoreTopBar(resource: bitsResource, gameState: gameState)
-                            .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top + 60)
-                            .background(Color.blue.opacity(0.5))
-                    }
+                                        let qubitsResource = gameState.model.resources.first(where: { $0.name == "Qubits" })
+                                        StoreTopBar(bitsResource: bitsResource, qubitsResource: qubitsResource, gameState: gameState)
+                                    }
                     
                     List {
                         ForEach(gameState.model.resources) { resource in
