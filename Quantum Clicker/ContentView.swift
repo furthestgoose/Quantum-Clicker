@@ -26,6 +26,7 @@ struct ContentView: View {
                             Label("Stats", systemImage: "chart.bar.fill")
                         }
                 }
+                .accentColor(gameState.model.quantumUnlocked ? .purple : .blue)
                 .onReceive(timer) { _ in
                     gameState.update()
                     try? modelContext.save()

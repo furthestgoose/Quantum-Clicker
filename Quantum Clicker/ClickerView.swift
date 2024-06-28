@@ -19,7 +19,7 @@ struct ClickerView: View {
                     TopBar(gameState: gameState, resource: bitsResource, qubitsResource: qubitsResource)
                 }
                 
-                TappableArea(perClick: gameState.model.resources.first(where: { $0.name == "Bits" })?.perClick ?? 0.1) {
+                TappableArea(gameState: gameState) {
                     gameState.click()
                 }
             }
@@ -116,30 +116,93 @@ struct RoundedCornersShape: Shape {
 }
 
 struct TappableArea: View {
-    let perClick: Double
+    @ObservedObject var gameState: GameState
     let action: () -> Void
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
-                Color.white
-                    .opacity(0.5)
-                    .frame(width: geometry.size.width, height: geometry.size.height)
-                    
+            VStack(spacing: 20) {
+                Spacer()
                 
-                VStack {
-                    Image(systemName: "hand.tap.fill")
-                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .foregroundColor(.black)
-                    Text("Click here to earn \(String(format: "%.2f", perClick)) \(perClick == 1 ? "bit" : "bits")")
-                        .foregroundColor(.black)
+                // Info panel
+                VStack(spacing: 10) {
+                    Text("Click to earn:")
                         .font(.headline)
+                    HStack(spacing: 20) {
+                        resourceInfo(
+                            icon: "square",
+                            value: gameState.model.resources.first(where: { $0.name == "Bits" })?.perClick ?? 0,
+                            label: "Bits"
+                        )
+                        if gameState.model.quantumUnlocked {
+                            resourceInfo(
+                                icon: "atom",
+                                value: gameState.model.resources.first(where: { $0.name == "Qubits" })?.perClick ?? 0,
+                                label: "Qubits"
+                            )
+                        }
+                    }
+                }
+                .padding()
+                .background(Color.white.opacity(0.9))
+                .cornerRadius(15)
+                .shadow(radius: 5)
+                
+                Spacer()
+                
+                // Clickable area
+                ZStack {
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: gameState.model.quantumUnlocked ? [.white, .purple] : [.white, .blue]),
+                                center: .center,
+                                startRadius: 5,
+                                endRadius: 180
+                            )
+                        )
+                        .frame(width: 200, height: 200)
+                        .shadow(color: gameState.model.quantumUnlocked ? .purple.opacity(0.3) : .blue.opacity(0.3), radius: 10, x: 0, y: 5)
+                    
+                    VStack {
+                        Image(systemName: "hand.tap.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 80, height: 80)
+                        
+                        Text("Tap Here!")
+                            .font(.headline)
+                    }
+                }
+                .onTapGesture {
+                    action()
                 }
                 
+                Spacer()
+                
+                Text("Tap the circle to generate resources!")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Spacer()
             }
-            .onTapGesture {
-                action()
+            .frame(width: geometry.size.width, height: geometry.size.height)
+            .background(Color.gray.opacity(0.1))
+        }
+    }
+    
+    private func resourceInfo(icon: String, value: Double, label: String) -> some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(gameState.model.quantumUnlocked ? .purple : .blue)
+            VStack(alignment: .leading) {
+                Text(gameState.formatNumber(value))
+                    .font(.headline)
+                Text(label)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
         }
     }

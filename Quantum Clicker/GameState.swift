@@ -79,7 +79,7 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 100000000, perClick: 0.1, perSecond: 0),
+            ResourceModel(name: "Bits", amount: 0, perClick: 0.1, perSecond: 0),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
     }
@@ -109,16 +109,17 @@ class GameState: ObservableObject {
     
     private func initializeFactories() {
         model.factories = [
-            FactoryModel(icon: "pc", name: "Personal Computer", cost: 14.9, count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
-            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 49.9, count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
-            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 199.9, count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
-            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 999.9, count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
-            FactoryModel(icon: "cloud", name: "Server Farm", cost: 4999.9, count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
-            FactoryModel(icon: "cpu", name: "Mainframe", cost: 24999.9, count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
-            FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 99999.9, count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
-            FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 499999.9, count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
-            FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 1999999.9, count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
-            FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 9999999.9, count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second")
+            FactoryModel(icon: "pc", name: "Personal Computer", cost: 14.9 ,costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
+            FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 49.9, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
+            FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 199.9, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
+            FactoryModel(icon: "server.rack", name: "Server Rack", cost: 999.9, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
+            FactoryModel(icon: "cloud", name: "Server Farm", cost: 4999.9, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
+            FactoryModel(icon: "cpu", name: "Mainframe", cost: 24999.9, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
+            FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 99999.9, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
+            FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 499999.9, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
+            FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 1999999.9, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
+            FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 9999999.9, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second"),
+            FactoryModel(icon: "Atom", name: "Basic Quantum Computer", cost: 5, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates 1 Qubit per second.")
         ]
     }
     
@@ -177,15 +178,35 @@ class GameState: ObservableObject {
         
         switch absNumber {
         case 0..<1000:
-            return String(format: "%@%.2f", sign, absNumber)
+            if number.truncatingRemainder(dividingBy: 1) == 0 {
+                return String(format: "%@%.0f",sign, absNumber)
+            }else{
+                return String(format: "%@%.1f", sign, absNumber)
+            }
         case 1000..<1_000_000:
-            return String(format: "%@%.2fK", sign, absNumber / 1000)
+            if number.truncatingRemainder(dividingBy: 1) == 0 {
+                return String(format: "%@%.0fK",sign, absNumber / 1000)
+            }else{
+                return String(format: "%@%.1fK", sign, absNumber / 1000)
+            }
         case 1_000_000..<1_000_000_000:
-            return String(format: "%@%.2fM", sign, absNumber / 1_000_000)
+            if number.truncatingRemainder(dividingBy: 1) == 0 {
+                return String(format: "%@%.0fM",sign, absNumber / 1_000_000)
+            }else{
+                return String(format: "%@%.1fM", sign, absNumber / 1_000_000)
+            }
         case 1_000_000_000..<1_000_000_000_000:
-            return String(format: "%@%.2fB", sign, absNumber / 1_000_000_000)
+            if number.truncatingRemainder(dividingBy: 1) == 0 {
+                return String(format: "%@%.0fB",sign, absNumber / 1_000_000_000)
+            }else{
+                return String(format: "%@%.1fB", sign, absNumber / 1_000_000_000)
+            }
         default:
-            return String(format: "%@%.2fT", sign, absNumber / 1_000_000_000_000)
+            if number.truncatingRemainder(dividingBy: 1) == 0 {
+                return String(format: "%@%.0fT",sign, absNumber / 1_000_000_000_000)
+            }else{
+                return String(format: "%@%.1fT", sign, absNumber / 1_000_000_000_000)
+            }
         }
     }
     
@@ -203,6 +224,9 @@ class GameState: ObservableObject {
     private func applyUpgradeEffect(_ upgrade: UpgradeModel) {
         switch upgrade.name {
         case "Quantum Research Lab":
+            if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
+                model.resources[bitsIndex].perClick += 0.1
+            }
             model.quantumUnlocked = true
         case "Premium Licence":
             if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
@@ -270,9 +294,10 @@ class GameState: ObservableObject {
         guard factoryIndex < model.factories.count else { return }
         let factory = model.factories[factoryIndex]
         let totalCost = factory.cost * (1 - pow(1.5, Double(quantity))) / (1 - 1.5)
-        if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }),
-           model.resources[bitsIndex].amount >= totalCost {
-            model.resources[bitsIndex].amount -= totalCost
+        
+        if let resourceIndex = model.resources.firstIndex(where: { $0.name == factory.costResourceType }),
+           model.resources[resourceIndex].amount >= totalCost {
+            model.resources[resourceIndex].amount -= totalCost
             for _ in 0..<quantity {
                 applyFactoryEffect(factory)
                 factory.count += 1
@@ -283,7 +308,7 @@ class GameState: ObservableObject {
     }
     
     private func applyFactoryEffect(_ factory: FactoryModel) {
-        if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+        if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }), let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
             switch factory.name {
             case "Personal Computer":
                 let output: Double
@@ -330,6 +355,8 @@ class GameState: ObservableObject {
                 model.resources[bitsIndex].perSecond += 20000
             case "Supercomputer":
                 model.resources[bitsIndex].perSecond += 100000
+            case "Basic Quantum Computer":
+                model.resources[qubitsIndex].perSecond += 1
             default:
                 break
             }

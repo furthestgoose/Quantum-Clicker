@@ -42,22 +42,6 @@ struct StoreView: View {
         }
     }
 }
-
-struct FactoriesList: View {
-    @ObservedObject var gameState: GameState
-
-    var body: some View {
-        List {
-            ForEach(gameState.model.factories.sorted(by: { $0.cost < $1.cost }), id: \.self) { factory in
-                if let index = gameState.model.factories.firstIndex(where: { $0.id == factory.id }) {
-                    FactoryRow(gameState: gameState, factory: factory, index: index)
-                }
-            }
-        }
-        .listStyle(PlainListStyle())
-    }
-}
-
 struct StoreTopBar: View {
     let bitsResource: ResourceModel
     let qubitsResource: ResourceModel?
@@ -140,7 +124,7 @@ struct UpgradesList: View {
     var body: some View {
         List {
             ForEach(filteredUpgrades) { upgrade in
-                UpgradeRow(upgrade: upgrade,
+                UpgradeRow(gameState: gameState,upgrade: upgrade,
                            canBuy: canBuy(upgrade)) {
                     gameState.buyUpgrade(gameState.model.upgrades.firstIndex(of: upgrade)!)
                 }
@@ -180,6 +164,7 @@ struct UpgradesList: View {
 }
 
 struct UpgradeRow: View {
+    @ObservedObject var gameState: GameState
     let upgrade: UpgradeModel
     let canBuy: Bool
     let action: () -> Void
@@ -189,39 +174,69 @@ struct UpgradeRow: View {
             Image(systemName: upgrade.icon)
                 .font(.title)
             VStack(alignment: .leading) {
-                
                 Text(upgrade.name).font(.headline)
                 Text(upgrade.OverView).font(.subheadline)
             }
             Spacer()
-            VStack{
+            VStack {
                 Button("Buy", action: action)
                     .buttonStyle(BorderlessButtonStyle())
                     .disabled(!canBuy)
                     .padding(.vertical, 5)
                     .padding(.horizontal, 10)
-                    .background(canBuy ? Color.blue : Color.gray)
+                    .background(canBuy ? (gameState.model.quantumUnlocked ? Color.purple : Color.blue) : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(5)
                 
-                Text("\(Int(upgrade.cost + 0.1)) bits")
+                // Conditional text for "bit" or "bits"
+                Text("\(gameState.formatNumber(upgrade.cost + 0.1)) \(upgrade.cost + 0.1 == 1 ? "bit" : "bits")")
                     .font(.caption)
-                    .foregroundColor(canBuy ? .blue : .gray)
+                    .foregroundColor(canBuy ? (gameState.model.quantumUnlocked ? .purple : .blue) : .gray)
             }
+        }
+    }
+}
+
+struct FactoriesList: View {
+    @ObservedObject var gameState: GameState
+
+    var body: some View {
+        List {
+            ForEach(sortedFactories, id: \.self) { factory in
+                if let index = gameState.model.factories.firstIndex(where: { $0.id == factory.id }) {
+                    FactoryRow(gameState: gameState, factory: factory, index: index)
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+    }
+    
+    var sortedFactories: [FactoryModel] {
+        let classicalFactories = gameState.model.factories.filter { $0.name != "Basic Quantum Computer" }
+        let sortedClassical = classicalFactories.sorted(by: { $0.initialCost < $1.initialCost })
+        
+        if gameState.model.quantumUnlocked, let quantumComputer = gameState.model.factories.first(where: { $0.name == "Basic Quantum Computer" }) {
+            return sortedClassical + [quantumComputer]
+        } else {
+            return sortedClassical
         }
     }
 }
 
 struct FactoryRow: View {
     @ObservedObject var gameState: GameState
-        let factory: FactoryModel
-        let index: Int
-        @State private var quantity = 1
+    let factory: FactoryModel
+    let index: Int
+    @State private var quantity = 1
     
     var canBuy: Bool {
-            let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
+        let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
+        if factory.costResourceType == "Qubits" {
+            return gameState.model.resources.first(where: { $0.name == "Qubits" })?.amount ?? 0 >= totalCost
+        } else {
             return gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= totalCost
         }
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -243,14 +258,14 @@ struct FactoryRow: View {
             .disabled(!canBuy)
             .padding(.vertical, 5)
             .padding(.horizontal, 10)
-            .background(canBuy ? Color.blue : Color.gray)
+            .background(canBuy ? (gameState.model.quantumUnlocked ? Color.purple : Color.blue) : Color.gray)
             .foregroundColor(.white)
             .cornerRadius(5)
             
             let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
-            Text("\(Int(totalCost + 0.1)) bits")
+            Text("\(gameState.formatNumber(totalCost + 0.1)) \(factory.costResourceType)")
                 .font(.caption)
-                .foregroundColor(canBuy ? .blue : .gray)
+                .foregroundColor(canBuy ? (gameState.model.quantumUnlocked ? .purple : .blue) : .gray)
         }
     }
 }
