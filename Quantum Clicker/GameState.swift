@@ -1,9 +1,11 @@
 import Foundation
 import SwiftData
+import BackgroundTasks
 
 @Model
 class GameStateModel: Identifiable{
     let id: UUID
+    var lastUpdateTime: Date = Date()
     var quantumUnlocked: Bool
     var personalComputerUnlocked: Bool
     var ramUpgradeBought: Bool
@@ -73,8 +75,7 @@ class GameState: ObservableObject {
         if model.factories.isEmpty {
             initializeFactories()
         }
-        
-        
+        scheduleAppRefresh()
     }
     
     private func initializeResources() {
@@ -109,7 +110,7 @@ class GameState: ObservableObject {
     
     private func initializeFactories() {
         model.factories = [
-            FactoryModel(icon: "pc", name: "Personal Computer", cost: 14.9 ,costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
+            FactoryModel(icon: "pc", name: "Personal Computer", cost: 15 ,costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
             FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 49.9, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
             FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 199.9, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
             FactoryModel(icon: "server.rack", name: "Server Rack", cost: 999.9, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
@@ -119,7 +120,7 @@ class GameState: ObservableObject {
             FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 499999.9, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
             FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 1999999.9, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 20000 bits per second"),
             FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 9999999.9, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second"),
-            FactoryModel(icon: "Atom", name: "Basic Quantum Computer", cost: 5, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates 1 Qubit per second.")
+            FactoryModel(icon: "Atom", name: "Basic Quantum Computer", cost: 4.9, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates 1 Qubit per second.")
         ]
     }
     
@@ -146,6 +147,56 @@ class GameState: ObservableObject {
             model.factories[index].OverView = "Generate \(outputPerUnit) bits per second"
         }
     }
+    
+    func canAffordAnyItem() -> Bool {
+            // Check if the user can afford any upgrade
+            for upgrade in model.upgrades {
+                let canBuyUpgradeWithBits = model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost
+                let canBuyUpgradeWithQubits = model.resources.first(where: { $0.name == "Qubits" })?.amount ?? 0 >= upgrade.cost
+                if canBuyUpgradeWithBits {
+                    return true
+                }else if canBuyUpgradeWithQubits{
+                    return true
+                }
+            }
+
+            // Check if the user can afford any factory
+            for factory in model.factories {
+                let factoryCost = factory.cost
+                let canBuyFactory = model.resources.first(where: { $0.name == factory.costResourceType })?.amount ?? 0 >= factoryCost
+                if canBuyFactory {
+                    return true
+                }
+            }
+
+            return false
+        }
+    
+    func calculateOfflineProgress() {
+            if let terminationTime = UserDefaults.standard.object(forKey: "terminationTime") as? Date {
+                let now = Date()
+                let timeDifference = now.timeIntervalSince(terminationTime)
+                let secondsElapsed = Int(timeDifference)
+                
+                for i in 0..<model.resources.count {
+                    let generatedAmount = model.resources[i].perSecond * Double(secondsElapsed)
+                    model.resources[i].amount += generatedAmount
+                }
+                
+                model.lastUpdateTime = now
+            }
+        }
+        
+        func scheduleAppRefresh() {
+            let request = BGAppRefreshTaskRequest(identifier: "com.name.adambyford.Quantum-Clicker.refresh")
+            request.earliestBeginDate = Date(timeIntervalSinceNow: 0.01 * 60)
+            
+            do {
+                try BGTaskScheduler.shared.submit(request)
+            } catch {
+                print("Could not schedule app refresh: \(error)")
+            }
+        }
     
     func updateWorkstation(multiplier: Double){
         if let index = model.factories.firstIndex(where: { $0.name == "Workstation" }) {
@@ -293,7 +344,7 @@ class GameState: ObservableObject {
     func buyFactory(_ factoryIndex: Int, quantity: Int = 1) {
         guard factoryIndex < model.factories.count else { return }
         let factory = model.factories[factoryIndex]
-        let totalCost = factory.cost * (1 - pow(1.5, Double(quantity))) / (1 - 1.5)
+        let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
         
         if let resourceIndex = model.resources.firstIndex(where: { $0.name == factory.costResourceType }),
            model.resources[resourceIndex].amount >= totalCost {

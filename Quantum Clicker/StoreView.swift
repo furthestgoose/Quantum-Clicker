@@ -230,7 +230,7 @@ struct FactoryRow: View {
     @State private var quantity = 1
     
     var canBuy: Bool {
-        let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
+        let totalCost = (factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)) - 0.1
         if factory.costResourceType == "Qubits" {
             return gameState.model.resources.first(where: { $0.name == "Qubits" })?.amount ?? 0 >= totalCost
         } else {
@@ -263,7 +263,7 @@ struct FactoryRow: View {
             .cornerRadius(5)
             
             let totalCost = factory.cost * (1 - pow(1.2, Double(quantity))) / (1 - 1.2)
-            Text("\(gameState.formatNumber(totalCost + 0.1)) \(factory.costResourceType)")
+            Text("\(gameState.formatNumber(totalCost)) \(factory.costResourceType)")
                 .font(.caption)
                 .foregroundColor(canBuy ? (gameState.model.quantumUnlocked ? .purple : .blue) : .gray)
         }
