@@ -152,6 +152,8 @@ struct UpgradesList: View {
                     return gameState.workstationCount >= 50
                 case "High-Speed Network Interface":
                     return gameState.workstationCount >= 100
+                case "Quantum Clicker":
+                    return gameState.model.quantumUnlocked
                 default:
                     return true
                 }
@@ -159,7 +161,12 @@ struct UpgradesList: View {
         }
 
     private func canBuy(_ upgrade: UpgradeModel) -> Bool {
-        return gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost
+        if upgrade.costResourceType == "Qubits" {
+            return gameState.model.resources.first(where: { $0.name == "Qubits" })?.amount ?? 0 >= upgrade.cost
+        } else {
+            return gameState.model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost
+        }
+        
     }
 }
 
@@ -189,7 +196,7 @@ struct UpgradeRow: View {
                     .cornerRadius(5)
                 
                 // Conditional text for "bit" or "bits"
-                Text("\(gameState.formatNumber(upgrade.cost + 0.1)) \(upgrade.cost + 0.1 == 1 ? "bit" : "bits")")
+                Text("\(gameState.formatNumber(upgrade.cost)) \(upgrade.costResourceType)")
                     .font(.caption)
                     .foregroundColor(canBuy ? (gameState.model.quantumUnlocked ? .purple : .blue) : .gray)
             }

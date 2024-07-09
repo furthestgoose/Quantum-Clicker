@@ -33,6 +33,10 @@ struct SplashScreenView: View {
                         resourceDisplay(amount: earnedAmountQubits, label: "Qubits", icon: "atom")
                     }
                 }
+                Text("Computers are 50% slower offline \n time away is capped at 8 hours")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .opacity(0.9)
             }
             .padding()
             .background(

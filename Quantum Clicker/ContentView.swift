@@ -72,32 +72,37 @@ struct ContentView: View {
     }
 
     func calculateOfflineProgress() {
-        if let terminationTime = UserDefaults.standard.object(forKey: "terminationTime") as? Date {
-            let now = Date()
-            let timeDifference = now.timeIntervalSince(terminationTime)
-            let secondsElapsed = Int(timeDifference)
-            
-            var bitsEarnings: Double = 0.0
-            var qubitsEarnings: Double = 0.0
-            
-            for resource in gameState!.model.resources {
-                let generatedAmount = resource.perSecond * Double(secondsElapsed)
-                resource.amount += generatedAmount
+            if let terminationTime = UserDefaults.standard.object(forKey: "terminationTime") as? Date {
+                let now = Date()
+                let timeDifference = now.timeIntervalSince(terminationTime)
+                let secondsElapsed = Int(timeDifference)
                 
-                if resource.name == "Bits" {
-                    bitsEarnings += generatedAmount
-                } else if resource.name == "Qubits" {
-                    qubitsEarnings += generatedAmount
+                // Cap offline progress to a maximum of 8 hours
+                let cappedSeconds = min(secondsElapsed, 8 * 60 * 60)
+                
+                var bitsEarnings: Double = 0.0
+                var qubitsEarnings: Double = 0.0
+                
+                for resource in gameState!.model.resources {
+                    let generatedAmount = resource.perSecond * Double(cappedSeconds)
+                    // Apply a 50% efficiency rate for offline production
+                    let adjustedAmount = generatedAmount * 0.5
+                    resource.amount += adjustedAmount
+                    
+                    if resource.name == "Bits" {
+                        bitsEarnings += adjustedAmount
+                    } else if resource.name == "Qubits" {
+                        qubitsEarnings += adjustedAmount
+                    }
                 }
+                
+                gameState!.model.lastUpdateTime = now
+                earnedAmountBits = bitsEarnings
+                earnedAmountQubits = qubitsEarnings
+                timeAway = Double(cappedSeconds)
+                showSplash = bitsEarnings > 0 || qubitsEarnings > 0
             }
-            
-            gameState!.model.lastUpdateTime = now
-            earnedAmountBits = bitsEarnings
-            earnedAmountQubits = qubitsEarnings
-            timeAway = timeDifference
-            showSplash = bitsEarnings > 0 || qubitsEarnings > 0
         }
-    }
 
     func handleAppRefresh(task: BGAppRefreshTask) {
         // Schedule a new refresh task
