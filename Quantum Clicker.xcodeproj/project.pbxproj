@@ -13,6 +13,7 @@
 		0634530C2C28959F00DACD2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0634530B2C28959F00DACD2C /* ContentView.swift */; };
 		0634530E2C2895A000DACD2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0634530D2C2895A000DACD2C /* Assets.xcassets */; };
 		063453122C2895A000DACD2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 063453112C2895A000DACD2C /* Preview Assets.xcassets */; };
+		0679C04B2C3E93E00064A4CB /* PrestigeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0679C04A2C3E93E00064A4CB /* PrestigeView.swift */; };
 		06CA32C82C28EC2D000E806F /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32C72C28EC2D000E806F /* GameState.swift */; };
 		06CA32CA2C28EC82000E806F /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32C92C28EC82000E806F /* Resource.swift */; };
 		06CA32CC2C28EC98000E806F /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32CB2C28EC98000E806F /* Upgrade.swift */; };
@@ -31,6 +32,7 @@
 		0634530D2C2895A000DACD2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0634530F2C2895A000DACD2C /* Quantum_Clicker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quantum_Clicker.entitlements; sourceTree = "<group>"; };
 		063453112C2895A000DACD2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0679C04A2C3E93E00064A4CB /* PrestigeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrestigeView.swift; sourceTree = "<group>"; };
 		06AFE6FB2C28B01E0070DBB4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		06CA32C72C28EC2D000E806F /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		06CA32C92C28EC82000E806F /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				063453092C28959F00DACD2C /* Quantum_ClickerApp.swift */,
 				0634530B2C28959F00DACD2C /* ContentView.swift */,
 				0615ED9D2C3C10DB00FBE0D2 /* SplashScreenView.swift */,
+				0679C04A2C3E93E00064A4CB /* PrestigeView.swift */,
 				06CA32CF2C28ECF6000E806F /* ClickerView.swift */,
 				06CA32D72C297344000E806F /* StoreView.swift */,
 				06CA32CD2C28ECAB000E806F /* Factory.swift */,
@@ -174,6 +177,7 @@
 				06CA32D82C297344000E806F /* StoreView.swift in Sources */,
 				06CA32CE2C28ECAB000E806F /* Factory.swift in Sources */,
 				06CA32D02C28ECF6000E806F /* ClickerView.swift in Sources */,
+				0679C04B2C3E93E00064A4CB /* PrestigeView.swift in Sources */,
 				06CA32D62C28EDBE000E806F /* StatsView.swift in Sources */,
 				0634530C2C28959F00DACD2C /* ContentView.swift in Sources */,
 				0615ED9E2C3C10DB00FBE0D2 /* SplashScreenView.swift in Sources */,

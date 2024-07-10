@@ -31,9 +31,3 @@ struct StatsView: View {
     }
 }
 
-struct StatsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let previewGameState = GameState(model: GameStateModel())
-        StatsView(gameState: previewGameState)
-    }
-}

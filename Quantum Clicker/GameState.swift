@@ -18,6 +18,14 @@ class GameStateModel: Identifiable{
     var workstationNetworkUpgradeBought: Bool
     var personalComputerDescription: String = "A basic home computer for simple data processing \nGenerates 0.1 bits per second"
     var workstationDescription: String = "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"
+    var prestigePoints: Int = 0
+    var totalBitsEarned: Double = 0
+    var totalQubitsEarned: Double = 0
+    var prestigeMultiplier: Double = 1.0
+    var availablePrestigePoints: Int {
+            // Example calculation: 1 prestige point per 1e12 (1 trillion) bits earned
+            return Int(totalBitsEarned / 1e12)
+        }
     
     @Relationship(deleteRule: .cascade) var resources: [ResourceModel]
     @Relationship(deleteRule: .cascade) var upgrades: [UpgradeModel]
@@ -65,20 +73,50 @@ class GameStateModel: Identifiable{
 
 class GameState: ObservableObject {
     @Published var model: GameStateModel
+    private var modelContext: ModelContext
     
-    init(model: GameStateModel) {
+    init(model: GameStateModel, modelContext: ModelContext) {
         self.model = model
-        if model.resources.isEmpty {
-            initializeResources()
-        }
-        if model.upgrades.isEmpty {
-            initializeUpgrades()
-        }
-        if model.factories.isEmpty {
-            initializeFactories()
-        }
-        scheduleAppRefresh()
+        self.modelContext = modelContext
+                
+                // Check if we need to reset after a prestige event
+                if model.prestigePoints > 0 && !model.upgrades.isEmpty {
+                    resetAfterPrestige()
+                } else {
+                    initializeIfNeeded()
+                }
+                
+                scheduleAppRefresh()
     }
+    
+    func resetAfterPrestige() {
+            model.upgrades.removeAll()
+            model.factories.removeAll()
+            initializeUpgrades()
+            initializeFactories()
+            // Make sure to save this state
+            saveGameState()
+        }
+        
+        private func initializeIfNeeded() {
+            if model.resources.isEmpty {
+                initializeResources()
+            }
+            if model.upgrades.isEmpty {
+                initializeUpgrades()
+            }
+            if model.factories.isEmpty {
+                initializeFactories()
+            }
+        }
+    
+    func saveGameState() {
+            do {
+                try modelContext.save()
+            } catch {
+                print("Error saving game state: \(error.localizedDescription)")
+            }
+        }
     
     private func initializeResources() {
         model.resources = [
@@ -89,14 +127,14 @@ class GameState: ObservableObject {
     
     private func initializeUpgrades() {
             model.upgrades = [
-                UpgradeModel(icon: "creditcard", name: "Premium Licence", cost: 20, costResourceType: "Bits", description: "You buy the Premium Software Licence \nIncrease bits per click by 0.1"),
+                UpgradeModel(icon: "creditcard", name: "Premium Licence", cost: 20, costResourceType: "Bits", description: "You buy the Premium Software Licence \nIncrease bits per click by \(formatNumber(0.1 * model.prestigeMultiplier))"),
                 UpgradeModel(icon: "cursorarrow.click", name: "Double Clicks", cost: 100, costResourceType: "Bits", description: "Double the number of bits per click"),
-                UpgradeModel(icon: "cursorarrow.click.badge.clock", name: "Autoclicker", cost: 500, costResourceType: "Bits", description: "Automatically generate 0.1 bits per second"),
+                UpgradeModel(icon: "cursorarrow.click.badge.clock", name: "Autoclicker", cost: 500, costResourceType: "Bits", description: "Automatically generate \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second"),
                 UpgradeModel(icon: "cursorarrow.click.2", name: "Triple Clicks", cost: 2000, costResourceType: "Bits", description: "Triple the number of bits per click"),
-                UpgradeModel(icon: "dot.circle.and.cursorarrow", name: "Precision Clicking", cost: 10000, costResourceType: "Bits", description: "Increase bits per click by 0.2 through improved accuracy"),
+                UpgradeModel(icon: "dot.circle.and.cursorarrow", name: "Precision Clicking", cost: 10000, costResourceType: "Bits", description: "Increase bits per click by \(formatNumber(0.2 * model.prestigeMultiplier)) through improved accuracy"),
                 UpgradeModel(icon: "cursorarrow.motionlines", name: "Quantum Clicker", cost: 1000000, costResourceType: "Bits", description: "Each click has a small chance to produce a qubit"),
-                UpgradeModel(icon: "apple.terminal", name: "Automated Clicking Software", cost: 5000000, costResourceType: "Bits", description: "Increase the autoclicker speed to 0.2 bits per second"),
-                UpgradeModel(icon: "network", name: "Network Clicks", cost: 20000000, costResourceType: "Bits", description: "Each click generates bits for every connected device, increasing bits per click by 0.5"),
+                UpgradeModel(icon: "apple.terminal", name: "Automated Clicking Software", cost: 5000000, costResourceType: "Bits", description: "Increase the autoclicker speed to \(formatNumber(0.2 * model.prestigeMultiplier)) bits per second"),
+                UpgradeModel(icon: "network", name: "Network Clicks", cost: 20000000, costResourceType: "Bits", description: "Each click generates bits for every connected device, increasing bits per click by \(formatNumber(0.5 * model.prestigeMultiplier))"),
                 UpgradeModel(icon: "memorychip", name: "RAM Upgrade", cost: 1000, costResourceType: "Bits", description: "Faster RAM is installed \nPersonal Computers are 1.5x faster"),
                 UpgradeModel(icon: "cpu", name: "CPU Upgrade", cost: 5000, costResourceType: "Bits", description: "The CPU is upgraded \nPersonal Computers are 2x faster"),
                 UpgradeModel(icon: "fan", name: "Cooling System Upgrade", cost: 20000, costResourceType: "Bits", description: "The Cooling System is upgraded \nPersonal Computers are 1.25x faster"),
@@ -111,17 +149,17 @@ class GameState: ObservableObject {
     
     private func initializeFactories() {
             model.factories = [
-                FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates 0.1 bits per second"),
-                FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 200, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"),
-                FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 2000, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates 2 bits per second"),
-                FactoryModel(icon: "server.rack", name: "Server Rack", cost: 20000, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates 10 bits per second"),
-                FactoryModel(icon: "cloud", name: "Server Farm", cost: 200000, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates 50 bits per second"),
-                FactoryModel(icon: "cpu", name: "Mainframe", cost: 2000000, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates 250 bits per second"),
-                FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 20000000, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates 1000 bits per second"),
-                FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates 5000 bits per second"),
-                FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates 25000 bits per second"),
-                FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 20000000000, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates 100000 bits per second"),
-                FactoryModel(icon: "building", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates 0.1 Qubit per second.")
+                FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 200, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 2000, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "server.rack", name: "Server Rack", cost: 20000, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "cloud", name: "Server Farm", cost: 200000, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "cpu", name: "Mainframe", cost: 2000000, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 20000000, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 20000000000, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "building", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) Qubit per second.")
             ]
         }
     
@@ -135,7 +173,7 @@ class GameState: ObservableObject {
     
     func updatePersonalComputerOutput(multiplier: Double) {
             if let index = model.factories.firstIndex(where: { $0.name == "Personal Computer" }) {
-                let baseOutput = 0.1
+                let baseOutput = 0.1 * model.prestigeMultiplier
                 let outputPerUnit = baseOutput * multiplier
                 let totalOutput = outputPerUnit * Double(model.factories[index].count)
                 
@@ -147,12 +185,41 @@ class GameState: ObservableObject {
                 
                 let newDescription = "Generate \(outputPerUnit) bits per second"
                 model.factories[index].OverView = newDescription
-                model.personalComputerDescription = newDescription  // Save the updated description
+                model.personalComputerDescription = newDescription
             }
         }
     
+    func performPrestige() {
+            let newPrestigePoints = model.availablePrestigePoints
+        
+            model.totalBitsEarned = 0
+    
+            model.prestigePoints += newPrestigePoints
+            model.prestigeMultiplier = 1 + Double(model.prestigePoints) * 0.1
+            
+            // Reset resources
+            for i in 0..<model.resources.count {
+                model.resources[i].amount = 0
+                model.resources[i].perClick = model.resources[i].name == "Bits" ? 0.1 * model.prestigeMultiplier : 0
+                model.resources[i].perSecond = 0
+            }
+            
+            // Reset factories
+            for i in 0..<model.factories.count {
+                model.factories[i].count = 0
+                model.factories[i].cost = model.factories[i].initialCost
+            }
+        
+            
+            model.personalComputerUnlocked = false
+            model.quantumUnlocked = false
+        
+            resetAfterPrestige()
+            
+            objectWillChange.send()
+        }
+    
     func canAffordAnyItem() -> Bool {
-            // Check if the user can afford any upgrade
             for upgrade in model.upgrades {
                 let canBuyUpgradeWithBits = model.resources.first(where: { $0.name == "Bits" })?.amount ?? 0 >= upgrade.cost
                 let canBuyUpgradeWithQubits = model.resources.first(where: { $0.name == "Qubits" })?.amount ?? 0 >= upgrade.cost
@@ -163,7 +230,6 @@ class GameState: ObservableObject {
                 }
             }
 
-            // Check if the user can afford any factory
             for factory in model.factories {
                 let factoryCost = factory.cost
                 let canBuyFactory = model.resources.first(where: { $0.name == factory.costResourceType })?.amount ?? 0 >= factoryCost
@@ -207,7 +273,7 @@ class GameState: ObservableObject {
     
     func updateWorkstation(multiplier: Double) {
             if let index = model.factories.firstIndex(where: { $0.name == "Workstation" }) {
-                let baseOutput = 0.5
+                let baseOutput = 0.5 * model.prestigeMultiplier
                 let outputPerUnit = baseOutput * multiplier
                 let totalOutput = outputPerUnit * Double(model.factories[index].count)
                 
@@ -219,18 +285,23 @@ class GameState: ObservableObject {
                 
                 let newDescription = "Generate \(outputPerUnit) bits per second"
                 model.factories[index].OverView = newDescription
-                model.workstationDescription = newDescription  // Save the updated description
+                model.workstationDescription = newDescription
             }
         }
     
     func click() {
-        if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-            model.resources[bitsIndex].amount += model.resources[bitsIndex].perClick
+            if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                let clickAmount = model.resources[bitsIndex].perClick
+                model.resources[bitsIndex].amount += clickAmount
+                model.totalBitsEarned += clickAmount * model.prestigeMultiplier
+            }
+            if model.quantumUnlocked, let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
+                let clickAmount = model.resources[qubitsIndex].perClick
+                model.resources[qubitsIndex].amount += clickAmount
+                model.totalQubitsEarned += clickAmount * model.prestigeMultiplier
+            }
+            objectWillChange.send()
         }
-        if model.quantumUnlocked, let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-            model.resources[qubitsIndex].amount += model.resources[qubitsIndex].perClick
-        }
-    }
     
     func formatNumber(_ number: Double) -> String {
         let absNumber = abs(number)
@@ -285,12 +356,12 @@ class GameState: ObservableObject {
             switch upgrade.name {
             case "Quantum Research Lab":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-                    model.resources[bitsIndex].perClick += 0.01
+                    model.resources[bitsIndex].perClick += 0.01 * model.prestigeMultiplier
                 }
                 model.quantumUnlocked = true
             case "Premium Licence":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.05
+                    model.resources[bitsIndex].perClick += 0.1 * model.prestigeMultiplier
                 }
             case "Double Clicks":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
@@ -298,27 +369,27 @@ class GameState: ObservableObject {
                 }
             case "Autoclicker":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perSecond += 0.05
+                    model.resources[bitsIndex].perSecond += 0.1 * model.prestigeMultiplier
                 }
             case "Triple Clicks":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick *= 3
+                    model.resources[bitsIndex].perClick *= 3 * model.prestigeMultiplier
                 }
             case "Precision Clicking":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.1
+                    model.resources[bitsIndex].perClick += 0.1 * model.prestigeMultiplier
                 }
             case "Quantum Clicker":
                 if let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-                    model.resources[qubitsIndex].perClick += 0.01
+                    model.resources[qubitsIndex].perClick += 0.01 * model.prestigeMultiplier
                 }
             case "Automated Clicking Software":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perSecond += 0.1
+                    model.resources[bitsIndex].perSecond += 0.1 * model.prestigeMultiplier
                 }
             case "Network Clicks":
                 if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.2
+                    model.resources[bitsIndex].perClick += 0.2 * model.prestigeMultiplier
                 }
             case "RAM Upgrade":
                 model.ramUpgradeBought = true
@@ -372,50 +443,50 @@ class GameState: ObservableObject {
                 case "Personal Computer":
                     let output: Double
                     if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought && model.storageUpgradeBought {
-                        output = 0.5625
+                        output = 0.5625 * model.prestigeMultiplier
                     } else if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought {
-                        output = 0.375
+                        output = 0.375 * model.prestigeMultiplier
                     } else if model.ramUpgradeBought && model.cpuUpgradeBought {
-                        output = 0.3
+                        output = 0.3 * model.prestigeMultiplier
                     } else if model.ramUpgradeBought {
-                        output = 0.15
+                        output = 0.15 * model.prestigeMultiplier
                     } else {
-                        output = 0.1
+                        output = 0.1 * model.prestigeMultiplier
                     }
                     model.resources[bitsIndex].perSecond += output
                     model.personalComputerUnlocked = true
                 case "Workstation":
                     let output: Double
                     if model.workstationCPUUpgradeBought && model.workstationGPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationNetworkUpgradeBought {
-                        output = 2.8125
+                        output = 2.8125 * model.prestigeMultiplier
                     } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationGPUUpgradeBought {
-                        output = 1.875
+                        output = 1.875 * model.prestigeMultiplier
                     } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought {
-                        output = 1.5
+                        output = 1.5 * model.prestigeMultiplier
                     } else if model.workstationCPUUpgradeBought {
-                        output = 0.75
+                        output = 0.75 * model.prestigeMultiplier
                     } else {
-                        output = 0.5
+                        output = 0.5 * model.prestigeMultiplier
                     }
                     model.resources[bitsIndex].perSecond += output
                 case "Mini Server":
-                    model.resources[bitsIndex].perSecond += 2
+                    model.resources[bitsIndex].perSecond += 2 * model.prestigeMultiplier
                 case "Server Rack":
-                    model.resources[bitsIndex].perSecond += 10
+                    model.resources[bitsIndex].perSecond += 10 * model.prestigeMultiplier
                 case "Server Farm":
-                    model.resources[bitsIndex].perSecond += 50
+                    model.resources[bitsIndex].perSecond += 50 * model.prestigeMultiplier
                 case "Mainframe":
-                    model.resources[bitsIndex].perSecond += 250
+                    model.resources[bitsIndex].perSecond += 250 * model.prestigeMultiplier
                 case "Vector Processor":
-                    model.resources[bitsIndex].perSecond += 1000
+                    model.resources[bitsIndex].perSecond += 1000 * model.prestigeMultiplier
                 case "Parallel Processing Array":
-                    model.resources[bitsIndex].perSecond += 5000
+                    model.resources[bitsIndex].perSecond += 5000 * model.prestigeMultiplier
                 case "Neural Network Computer":
-                    model.resources[bitsIndex].perSecond += 25000
+                    model.resources[bitsIndex].perSecond += 25000 * model.prestigeMultiplier
                 case "Supercomputer":
-                    model.resources[bitsIndex].perSecond += 100000
+                    model.resources[bitsIndex].perSecond += 100000 * model.prestigeMultiplier
                 case "Basic Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 0.1
+                    model.resources[qubitsIndex].perSecond += 0.1 * model.prestigeMultiplier
                 default:
                     break
                 }
@@ -423,8 +494,19 @@ class GameState: ObservableObject {
         }
     
     func update() {
-        for i in 0..<model.resources.count {
-            model.resources[i].amount += model.resources[i].perSecond
+            for i in 0..<model.resources.count {
+                let previousAmount = model.resources[i].amount
+                let newAmount = previousAmount + (model.resources[i].perSecond * model.prestigeMultiplier)
+                model.resources[i].amount = newAmount
+                
+                let earned = newAmount - previousAmount
+                
+                if model.resources[i].name == "Bits" {
+                    model.totalBitsEarned += earned
+                } else if model.resources[i].name == "Qubits" {
+                    model.totalQubitsEarned += earned
+                }
+            }
+            objectWillChange.send()
         }
-    }
 }

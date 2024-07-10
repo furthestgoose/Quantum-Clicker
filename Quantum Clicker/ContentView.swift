@@ -25,18 +25,22 @@ struct ContentView: View {
                         }
                     
                     StoreView(gameState: gameState)
-                                            .tabItem {
-                                                if gameState.canAffordAnyItem() {
-                                                    Label("Store", systemImage: "exclamationmark.circle")
-                                                        
-                                                } else {
-                                                    Label("Store", systemImage: "storefront.fill")
-                                                }
-                                            }
+                        .tabItem {
+                            if gameState.canAffordAnyItem() {
+                                Label("Store", systemImage: "exclamationmark.circle")
+                            } else {
+                                Label("Store", systemImage: "storefront.fill")
+                            }
+                        }
                     
                     StatsView(gameState: gameState)
                         .tabItem {
                             Label("Stats", systemImage: "chart.bar.fill")
+                        }
+                    
+                    PrestigeView(gameState: gameState)
+                        .tabItem {
+                            Label("Prestige", systemImage: "arrow.triangle.2.circlepath")
                         }
                 }
                 .accentColor(gameState.model.quantumUnlocked ? .purple : .blue)
@@ -60,7 +64,7 @@ struct ContentView: View {
                     gameStateModel = GameStateModel()
                     modelContext.insert(gameStateModel)
                 }
-                gameState = GameState(model: gameStateModel)
+                gameState = GameState(model: gameStateModel, modelContext: modelContext)
                 
                 // Calculate offline progress on app launch
                 calculateOfflineProgress()
