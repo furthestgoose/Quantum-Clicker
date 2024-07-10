@@ -33,7 +33,7 @@ struct PrestigeView: View {
                                 HStack {
                                     Image(systemName: "multiply.circle.fill")
                                         .foregroundColor(.green)
-                                    Text("x\(String(format: "%.2f", 1 + Double(gameState.model.availablePrestigePoints) * 0.1)) Production Multiplier")
+                                    Text("x\(String(format: "%.2f", 0 + Double(gameState.model.availablePrestigePoints) * 0.1)) Production Multiplier")
                                 }
                             }
                             .padding()

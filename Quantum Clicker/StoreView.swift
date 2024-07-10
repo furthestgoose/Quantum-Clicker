@@ -3,37 +3,37 @@ import SwiftUI
 enum StoreTab {
     case factories
     case upgrades
+    case prestigeUpgrades
 }
-
-
-
 
 struct StoreView: View {
     @ObservedObject var gameState: GameState
     @State private var selectedTab: StoreTab = .factories
 
     var body: some View {
-        
         NavigationStack {
-            
             GeometryReader { geometry in
                 VStack(spacing: 0) {
                     if let bitsResource = gameState.model.resources.first(where: { $0.name == "Bits" }) {
-                                        let qubitsResource = gameState.model.resources.first(where: { $0.name == "Qubits" })
-                                        StoreTopBar(bitsResource: bitsResource, qubitsResource: qubitsResource, gameState: gameState)
-                                    }
+                        let qubitsResource = gameState.model.resources.first(where: { $0.name == "Qubits" })
+                        StoreTopBar(bitsResource: bitsResource, qubitsResource: qubitsResource, gameState: gameState)
+                    }
                     
                     Picker("Store Tab", selection: $selectedTab) {
                         Text("Computers").tag(StoreTab.factories)
                         Text("Upgrades").tag(StoreTab.upgrades)
+                        Text("Prestige").tag(StoreTab.prestigeUpgrades)
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .padding()
 
-                    if selectedTab == .factories {
+                    switch selectedTab {
+                    case .factories:
                         FactoriesList(gameState: gameState)
-                    } else {
+                    case .upgrades:
                         UpgradesList(gameState: gameState)
+                    case .prestigeUpgrades:
+                        PrestigeUpgradesList(gameState: gameState)
                     }
                 }
                 .ignoresSafeArea(edges: .top)
@@ -42,6 +42,7 @@ struct StoreView: View {
         }
     }
 }
+
 struct StoreTopBar: View {
     let bitsResource: ResourceModel
     let qubitsResource: ResourceModel?
@@ -62,11 +63,13 @@ struct StoreTopBar: View {
             .padding(.bottom, 5)
             
             HStack(spacing: 20) {
-                resourceDisplay(amount: bitsResource.amount, perSecond: bitsResource.perSecond, label: "Bits", icon: "square")
+                resourceDisplay(showPerSec: true, amount: bitsResource.amount, perSecond: bitsResource.perSecond, label: "Bits", icon: "square")
                 if gameState.model.quantumUnlocked, let qubits = qubitsResource {
                     Divider().background(Color.white.opacity(0.3))
-                    resourceDisplay(amount: qubits.amount, perSecond: qubits.perSecond, label: "Qubits", icon: "atom")
+                    resourceDisplay(showPerSec: true,amount: qubits.amount, perSecond: qubits.perSecond, label: "Qubits", icon: "atom")
                 }
+                Divider().background(Color.white.opacity(0.3))
+                resourceDisplay(showPerSec: false,amount: Double(gameState.model.prestigePoints), perSecond: 0, label: "Prestige Points", icon: "star.fill")
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 10)
@@ -86,7 +89,7 @@ struct StoreTopBar: View {
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
     
-    private func resourceDisplay(amount: Double, perSecond: Double, label: String, icon: String) -> some View {
+    private func resourceDisplay(showPerSec: Bool, amount: Double, perSecond: Double, label: String, icon: String) -> some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.system(size: 18))
@@ -105,9 +108,66 @@ struct StoreTopBar: View {
                     Text(label)
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(.white.opacity(0.8))
-                    Text("\(gameState.formatNumber(perSecond))/s")
-                        .font(.system(size: 10, weight: .regular))
-                        .foregroundColor(.white.opacity(0.7))
+                    if showPerSec{
+                        Text("\(gameState.formatNumber(perSecond))/s")
+                            .font(.system(size: 10, weight: .regular))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct PrestigeUpgradesList: View {
+    @ObservedObject var gameState: GameState
+
+    var body: some View {
+        List {
+            ForEach(gameState.model.prestigeUpgrades) { upgrade in
+                PrestigeUpgradeRow(gameState: gameState, upgrade: upgrade,
+                           canBuy: gameState.canBuyPrestigeUpgrade(upgrade)) {
+                    gameState.buyPrestigeUpgrade(upgrade)
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
+    }
+}
+
+struct PrestigeUpgradeRow: View {
+    @ObservedObject var gameState: GameState
+    let upgrade: PrestigeUpgradeModel
+    let canBuy: Bool
+    let action: () -> Void
+    
+    var body: some View {
+        HStack {
+            Image(systemName: upgrade.icon)
+                .font(.title)
+            VStack(alignment: .leading) {
+                Text(upgrade.name).font(.headline)
+                Text(upgrade.overview).font(.subheadline)
+            }
+            Spacer()
+            VStack {
+                if upgrade.bought {
+                    Text("Purchased")
+                        .foregroundColor(.green)
+                        .font(.caption)
+                } else {
+                    Button("Buy", action: action)
+                        .buttonStyle(BorderlessButtonStyle())
+                        .disabled(!canBuy)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 10)
+                        .background(canBuy ? Color.purple : Color.gray)
+                        .foregroundColor(.white)
+                        .cornerRadius(5)
+                    
+                    Text("\(upgrade.cost) PP")
+                        .font(.caption)
+                        .foregroundColor(canBuy ? .purple : .gray)
                 }
             }
         }

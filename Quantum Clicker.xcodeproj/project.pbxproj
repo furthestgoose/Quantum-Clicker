@@ -21,6 +21,7 @@
 		06CA32D02C28ECF6000E806F /* ClickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32CF2C28ECF6000E806F /* ClickerView.swift */; };
 		06CA32D62C28EDBE000E806F /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32D52C28EDBE000E806F /* StatsView.swift */; };
 		06CA32D82C297344000E806F /* StoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32D72C297344000E806F /* StoreView.swift */; };
+		06E3695E2C3F0850005284A1 /* PrestigeUpgradeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E3695D2C3F0850005284A1 /* PrestigeUpgradeModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		06CA32CF2C28ECF6000E806F /* ClickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickerView.swift; sourceTree = "<group>"; };
 		06CA32D52C28EDBE000E806F /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		06CA32D72C297344000E806F /* StoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreView.swift; sourceTree = "<group>"; };
+		06E3695D2C3F0850005284A1 /* PrestigeUpgradeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrestigeUpgradeModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +84,7 @@
 				06CA32CF2C28ECF6000E806F /* ClickerView.swift */,
 				06CA32D72C297344000E806F /* StoreView.swift */,
 				06CA32CD2C28ECAB000E806F /* Factory.swift */,
+				06E3695D2C3F0850005284A1 /* PrestigeUpgradeModel.swift */,
 				06CA32CB2C28EC98000E806F /* Upgrade.swift */,
 				06CA32D52C28EDBE000E806F /* StatsView.swift */,
 				06CA32C92C28EC82000E806F /* Resource.swift */,
@@ -181,6 +184,7 @@
 				06CA32D62C28EDBE000E806F /* StatsView.swift in Sources */,
 				0634530C2C28959F00DACD2C /* ContentView.swift in Sources */,
 				0615ED9E2C3C10DB00FBE0D2 /* SplashScreenView.swift in Sources */,
+				06E3695E2C3F0850005284A1 /* PrestigeUpgradeModel.swift in Sources */,
 				0634530A2C28959F00DACD2C /* Quantum_ClickerApp.swift in Sources */,
 				06CA32CC2C28EC98000E806F /* Upgrade.swift in Sources */,
 			);

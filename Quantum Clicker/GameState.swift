@@ -22,6 +22,7 @@ class GameStateModel: Identifiable{
     var totalBitsEarned: Double = 0
     var totalQubitsEarned: Double = 0
     var prestigeMultiplier: Double = 1.0
+    var offlineEfficiency: Double?
     var availablePrestigePoints: Int {
             // Example calculation: 1 prestige point per 1e12 (1 trillion) bits earned
             return Int(totalBitsEarned / 1e12)
@@ -30,6 +31,8 @@ class GameStateModel: Identifiable{
     @Relationship(deleteRule: .cascade) var resources: [ResourceModel]
     @Relationship(deleteRule: .cascade) var upgrades: [UpgradeModel]
     @Relationship(deleteRule: .cascade) var factories: [FactoryModel]
+    @Relationship(deleteRule: .cascade) var prestigeUpgrades: [PrestigeUpgradeModel]
+    var factoryEfficiencyMultiplier: Double = 1.0
     
     init(id: UUID = UUID(), quantumUnlocked: Bool = false, personalComputerUnlocked: Bool = false,
          ramUpgradeBought: Bool = false, cpuUpgradeBought: Bool = false, coolingUpgradeBought: Bool = false,
@@ -49,24 +52,8 @@ class GameStateModel: Identifiable{
         self.resources = []
         self.upgrades = []
         self.factories = []
+        self.prestigeUpgrades = []
     }
-    
-    func debugPrint() {
-            print("Resources:")
-            for resource in resources {
-                print("- \(resource.name), amount: \(resource.amount), perClick: \(resource.perClick), perSecond: \(resource.perSecond)")
-            }
-
-            print("\nUpgrades:")
-            for upgrade in upgrades {
-                print("- \(upgrade.name), cost: \(upgrade.cost), description: \(upgrade.OverView)")
-            }
-
-            print("\nFactories:")
-            for factory in factories {
-                print("- \(factory.name), cost: \(factory.cost), count: \(factory.count), description: \(factory.OverView)")
-            }
-        }
 }
 
 // MARK: - GameState Class
@@ -108,6 +95,9 @@ class GameState: ObservableObject {
             if model.factories.isEmpty {
                 initializeFactories()
             }
+            if model.prestigeUpgrades.isEmpty {
+                initializePrestigeUpgrades()
+            }
         }
     
     func saveGameState() {
@@ -120,7 +110,7 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 0, perClick: 0.1, perSecond: 0),
+            ResourceModel(name: "Bits", amount: 0, perClick: 0, perSecond: 0.1),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
     }
@@ -163,6 +153,19 @@ class GameState: ObservableObject {
             ]
         }
     
+    private func initializePrestigeUpgrades() {
+            model.prestigeUpgrades = [
+                PrestigeUpgradeModel(icon: "sparkles", name: "Quick Start", description: "Start with 100 bits after prestige", cost: 1),
+                PrestigeUpgradeModel(icon: "clock.arrow.circlepath", name: "Time Warp", description: "Gain 100 hours worth of bits production", cost: 2),
+                PrestigeUpgradeModel(icon: "multiply.circle.fill", name: "Multiplier Boost", description: "Increase your prestige multiplier by 10%", cost: 5),
+                PrestigeUpgradeModel(icon: "sparkles", name: "Starting Boost", description: "Start with 1000 bits after prestige", cost: 3),
+                PrestigeUpgradeModel(icon: "bolt.fill", name: "Click Power", description: "Double your bits per click", cost: 4),
+                PrestigeUpgradeModel(icon: "cpu", name: "Factory Efficiency", description: "All factories produce 25% more bits", cost: 7),
+                PrestigeUpgradeModel(icon: "hourglass", name: "Offline Progress", description: "Increase offline production efficiency to 75%", cost: 8),
+                PrestigeUpgradeModel(icon: "dollarsign.circle", name: "Cost Reduction", description: "Reduce all factory costs by 10%", cost: 10),
+            ]
+        }
+    
     var personalComputerCount: Int {
         model.factories.first { $0.name == "Personal Computer" }?.count ?? 0
     }
@@ -170,6 +173,55 @@ class GameState: ObservableObject {
     var workstationCount: Int {
         model.factories.first { $0.name == "Workstation" }?.count ?? 0
     }
+    
+    func canBuyPrestigeUpgrade(_ upgrade: PrestigeUpgradeModel) -> Bool {
+            return model.prestigePoints >= upgrade.cost && !upgrade.bought
+        }
+
+        func buyPrestigeUpgrade(_ upgrade: PrestigeUpgradeModel) {
+            if canBuyPrestigeUpgrade(upgrade) {
+                model.prestigePoints -= upgrade.cost
+                upgrade.bought = true
+                applyPrestigeUpgradeEffect(upgrade)
+                objectWillChange.send()
+            }
+        }
+
+    private func applyPrestigeUpgradeEffect(_ upgrade: PrestigeUpgradeModel) {
+            switch upgrade.name {
+            case "Quick Start":
+                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                    model.resources[bitsIndex].amount += 100
+                }
+            case "Time Warp":
+                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                    let production = model.resources[bitsIndex].perSecond
+                    model.resources[bitsIndex].amount += production * 3600 * 100 // 100 hours worth
+                }
+            case "Multiplier Boost":
+                model.prestigeMultiplier *= 1.1 // Increase by 10%
+            case "Starting Boost":
+                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                    model.resources[bitsIndex].amount += 1000
+                }
+            case "Click Power":
+                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                    model.resources[bitsIndex].perClick *= 2
+                }
+            case "Factory Efficiency":
+                model.factoryEfficiencyMultiplier *= 1.25
+                recalculateAllFactoryOutputs()
+            case "Offline Progress":
+                // This will be used in the calculateOfflineProgress function
+                model.offlineEfficiency = 0.75
+            case "Cost Reduction":
+                for i in 0..<model.factories.count {
+                    model.factories[i].cost *= 0.9
+                }
+            default:
+                break
+            }
+        }
     
     func updatePersonalComputerOutput(multiplier: Double) {
             if let index = model.factories.firstIndex(where: { $0.name == "Personal Computer" }) {
@@ -192,15 +244,15 @@ class GameState: ObservableObject {
     func performPrestige() {
             let newPrestigePoints = model.availablePrestigePoints
         
-            model.totalBitsEarned = 0
+            
     
             model.prestigePoints += newPrestigePoints
-            model.prestigeMultiplier = 1 + Double(model.prestigePoints) * 0.1
+            model.prestigeMultiplier +=  Double(newPrestigePoints) * 0.1
             
             // Reset resources
             for i in 0..<model.resources.count {
                 model.resources[i].amount = 0
-                model.resources[i].perClick = model.resources[i].name == "Bits" ? 0.1 * model.prestigeMultiplier : 0
+               
                 model.resources[i].perSecond = 0
             }
             
@@ -213,6 +265,14 @@ class GameState: ObservableObject {
             
             model.personalComputerUnlocked = false
             model.quantumUnlocked = false
+        
+            // Reapply effects of bought prestige upgrades
+            for upgrade in model.prestigeUpgrades where upgrade.bought {
+                applyPrestigeUpgradeEffect(upgrade)
+            }
+        
+            model.totalBitsEarned = 0
+            saveGameState()
         
             resetAfterPrestige()
             
@@ -241,6 +301,53 @@ class GameState: ObservableObject {
             return false
         }
     
+    private func recalculateAllFactoryOutputs() {
+            // Reset all resource production rates
+            for i in 0..<model.resources.count {
+                model.resources[i].perSecond = 0
+            }
+
+            // Recalculate production for all factories
+            for factory in model.factories {
+                for _ in 0..<factory.count {
+                    applyFactoryEffect(factory)
+                }
+                updateFactoryDescription(factory)
+            }
+        }
+    private func updateFactoryDescription(_ factory: FactoryModel) {
+            let baseOutput = getBaseOutput(for: factory.name)
+            let upgradedOutput = baseOutput * model.factoryEfficiencyMultiplier * model.prestigeMultiplier
+            factory.OverView = "Generates \(formatNumber(upgradedOutput)) \(factory.name == "Basic Quantum Computer" ? "qubits" : "bits") per second"
+        }
+    
+    private func getBaseOutput(for factoryName: String) -> Double {
+            switch factoryName {
+            case "Personal Computer":
+                return 0.1
+            case "Workstation":
+                return 0.5
+            case "Mini Server":
+                return 2
+            case "Server Rack":
+                return 10
+            case "Server Farm":
+                return 50
+            case "Mainframe":
+                return 250
+            case "Vector Processor":
+                return 1000
+            case "Parallel Processing Array":
+                return 5000
+            case "Neural Network Computer":
+                return 25000
+            case "Supercomputer":
+                return 100000
+            default:
+                return 0
+            }
+        }
+    
     func calculateOfflineProgress() {
             if let terminationTime = UserDefaults.standard.object(forKey: "terminationTime") as? Date {
                 let now = Date()
@@ -252,8 +359,8 @@ class GameState: ObservableObject {
                 
                 for i in 0..<model.resources.count {
                     let generatedAmount = model.resources[i].perSecond * Double(cappedSeconds)
-                    // Apply a 50% efficiency rate for offline production
-                    model.resources[i].amount += generatedAmount * 0.5
+                    // Apply the offline efficiency rate for offline production
+                    model.resources[i].amount += generatedAmount * (model.offlineEfficiency ?? 0.5)
                 }
                 
                 model.lastUpdateTime = now
@@ -293,12 +400,12 @@ class GameState: ObservableObject {
             if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
                 let clickAmount = model.resources[bitsIndex].perClick
                 model.resources[bitsIndex].amount += clickAmount
-                model.totalBitsEarned += clickAmount * model.prestigeMultiplier
+                model.totalBitsEarned += clickAmount
             }
             if model.quantumUnlocked, let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
                 let clickAmount = model.resources[qubitsIndex].perClick
                 model.resources[qubitsIndex].amount += clickAmount
-                model.totalQubitsEarned += clickAmount * model.prestigeMultiplier
+                model.totalQubitsEarned += clickAmount
             }
             objectWillChange.send()
         }
@@ -443,50 +550,50 @@ class GameState: ObservableObject {
                 case "Personal Computer":
                     let output: Double
                     if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought && model.storageUpgradeBought {
-                        output = 0.5625 * model.prestigeMultiplier
+                        output = 0.5625 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought {
-                        output = 0.375 * model.prestigeMultiplier
+                        output = 0.375 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.ramUpgradeBought && model.cpuUpgradeBought {
-                        output = 0.3 * model.prestigeMultiplier
+                        output = 0.3 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.ramUpgradeBought {
-                        output = 0.15 * model.prestigeMultiplier
+                        output = 0.15 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else {
-                        output = 0.1 * model.prestigeMultiplier
+                        output = 0.1 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     }
                     model.resources[bitsIndex].perSecond += output
                     model.personalComputerUnlocked = true
                 case "Workstation":
                     let output: Double
                     if model.workstationCPUUpgradeBought && model.workstationGPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationNetworkUpgradeBought {
-                        output = 2.8125 * model.prestigeMultiplier
+                        output = 2.8125 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationGPUUpgradeBought {
-                        output = 1.875 * model.prestigeMultiplier
+                        output = 1.875 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought {
-                        output = 1.5 * model.prestigeMultiplier
+                        output = 1.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else if model.workstationCPUUpgradeBought {
-                        output = 0.75 * model.prestigeMultiplier
+                        output = 0.75 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     } else {
-                        output = 0.5 * model.prestigeMultiplier
+                        output = 0.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                     }
                     model.resources[bitsIndex].perSecond += output
                 case "Mini Server":
-                    model.resources[bitsIndex].perSecond += 2 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 2 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Server Rack":
-                    model.resources[bitsIndex].perSecond += 10 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 10 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Server Farm":
-                    model.resources[bitsIndex].perSecond += 50 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 50 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Mainframe":
-                    model.resources[bitsIndex].perSecond += 250 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 250 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Vector Processor":
-                    model.resources[bitsIndex].perSecond += 1000 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 1000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Parallel Processing Array":
-                    model.resources[bitsIndex].perSecond += 5000 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 5000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Neural Network Computer":
-                    model.resources[bitsIndex].perSecond += 25000 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 25000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Supercomputer":
-                    model.resources[bitsIndex].perSecond += 100000 * model.prestigeMultiplier
+                    model.resources[bitsIndex].perSecond += 100000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Basic Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 0.1 * model.prestigeMultiplier
+                    model.resources[qubitsIndex].perSecond += 0.1 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 default:
                     break
                 }
