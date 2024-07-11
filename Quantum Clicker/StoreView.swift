@@ -121,12 +121,12 @@ struct StoreTopBar: View {
 
 struct PrestigeUpgradesList: View {
     @ObservedObject var gameState: GameState
-
+    
     var body: some View {
         List {
-            ForEach(gameState.model.prestigeUpgrades) { upgrade in
+            ForEach(gameState.model.prestigeUpgrades.sorted(by: { $1.cost > $0.cost })) { upgrade in
                 PrestigeUpgradeRow(gameState: gameState, upgrade: upgrade,
-                           canBuy: gameState.canBuyPrestigeUpgrade(upgrade)) {
+                                   canBuy: gameState.canBuyPrestigeUpgrade(upgrade)) {
                     gameState.buyPrestigeUpgrade(upgrade)
                 }
             }
@@ -161,13 +161,13 @@ struct PrestigeUpgradeRow: View {
                         .disabled(!canBuy)
                         .padding(.vertical, 5)
                         .padding(.horizontal, 10)
-                        .background(canBuy ? Color.purple : Color.gray)
+                        .background(canBuy ? .gold : Color.gray)
                         .foregroundColor(.white)
                         .cornerRadius(5)
                     
-                    Text("\(upgrade.cost) PP")
+                    Text("\(upgrade.cost) \(upgrade.cost > 1 ? "Prestige Points" : "Prestige Point")")
                         .font(.caption)
-                        .foregroundColor(canBuy ? .purple : .gray)
+                        .foregroundColor(canBuy ? .gold : .gray)
                 }
             }
         }

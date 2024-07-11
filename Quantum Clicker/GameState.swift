@@ -27,7 +27,7 @@ class GameStateModel: Identifiable{
             // Example calculation: 1 prestige point per 1e12 (1 trillion) bits earned
             return Int(totalBitsEarned / 1e12)
         }
-    
+    @Relationship(deleteRule: .cascade) var achievements: [AchievementModel]
     @Relationship(deleteRule: .cascade) var resources: [ResourceModel]
     @Relationship(deleteRule: .cascade) var upgrades: [UpgradeModel]
     @Relationship(deleteRule: .cascade) var factories: [FactoryModel]
@@ -53,6 +53,7 @@ class GameStateModel: Identifiable{
         self.upgrades = []
         self.factories = []
         self.prestigeUpgrades = []
+        self.achievements = []
     }
 }
 
@@ -81,6 +82,7 @@ class GameState: ObservableObject {
             model.factories.removeAll()
             initializeUpgrades()
             initializeFactories()
+            checkAchievements()
             // Make sure to save this state
             saveGameState()
         }
@@ -98,6 +100,9 @@ class GameState: ObservableObject {
             if model.prestigeUpgrades.isEmpty {
                 initializePrestigeUpgrades()
             }
+            if model.achievements.isEmpty{
+                initializeAchievements()
+            }
         }
     
     func saveGameState() {
@@ -110,9 +115,28 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 0, perClick: 0, perSecond: 0.1),
+            ResourceModel(name: "Bits", amount: 0, perClick: 0.1, perSecond: 0),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
+    }
+    
+    func initializeAchievements() {
+        model.achievements = [
+                        AchievementModel(id: "Myfirstbit", title: "My First Bit", description: "Earn 1 bit", isUnlocked: false, order: 0),
+                        AchievementModel(id: "Automation", title: "My First Factory", description: "Own 1 factory", isUnlocked: false, order: 1),
+                        AchievementModel(id: "Doublebit", title: "Double Digits", description: "Earn 10 bits", isUnlocked: false, order: 2),
+                        AchievementModel(id: "Automation2", title: "Advanced Production", description: "Own 10 factories", isUnlocked: false, order: 3),
+                        AchievementModel(id: "Triplebit", title: "Triple Digits", description: "Earn 100 bits", isUnlocked: false, order: 4),
+                        AchievementModel(id: "Quadbit", title: "Quadruple Digits", description: "Earn 1000 bits", isUnlocked: false, order: 5),
+                        AchievementModel(id: "Automation3", title: "Mass Production", description: "Own 50 factories", isUnlocked: false, order: 6),
+                        AchievementModel(id: "10kb", title: "10,000 bits", description: "Earn 10000 bits", isUnlocked: false, order: 7),
+                        AchievementModel(id: "factoryTycoon", title: "Factory Tycoon", description: "Own 100 factories", isUnlocked: false, order: 8),
+                        AchievementModel(id: "datac", title: "Data Conglomerate", description: "Earn 100000 bits", isUnlocked: false, order: 9),
+                        AchievementModel(id: "bitMillionaire", title: "Bit Millionaire", description: "Earn 1,000,000 bits", isUnlocked: false, order: 10),
+                        AchievementModel(id: "quantumLeap", title: "Quantum Leap", description: "Unlock quantum computing", isUnlocked: false, order: 11),
+                        AchievementModel(id: "Quantum Era", title: "Welcome to the quantum era", description: "earn 1 qubit", isUnlocked: false, order: 12),
+                        AchievementModel(id: "prestigeMaster", title: "Prestige Master", description: "Prestige 5 times", isUnlocked: false, order: 13),
+                    ]
     }
     
     private func initializeUpgrades() {
@@ -186,6 +210,73 @@ class GameState: ObservableObject {
                 objectWillChange.send()
             }
         }
+    
+    func checkAchievements() {
+            for achievement in model.achievements {
+                switch achievement.id {
+                case "bitMillionaire":
+                    if model.totalBitsEarned >= 1_000_000 {
+                        achievement.isUnlocked = true
+                    }
+                case "quantumLeap":
+                    if model.quantumUnlocked {
+                        achievement.isUnlocked = true
+                    }
+                case "factoryTycoon":
+                    if model.factories.reduce(0) { $0 + $1.count } >= 100 {
+                        achievement.isUnlocked = true
+                    }
+                case "prestigeMaster":
+                    if model.prestigePoints >= 5 {
+                        achievement.isUnlocked = true
+                    }
+                case "myfirstbit":
+                    if model.totalBitsEarned >= 1{
+                        achievement.isUnlocked = true
+                    }
+                case "Doublebit":
+                    if model.totalBitsEarned >= 10{
+                        achievement.isUnlocked = true
+                    }
+                case "Triplebit":
+                    if model.totalBitsEarned >= 100{
+                        achievement.isUnlocked = true
+                    }
+                case "Quadbit":
+                    if model.totalBitsEarned >= 1000{
+                        achievement.isUnlocked = true
+                    }
+                case "10kb":
+                    if model.totalBitsEarned >= 10_000{
+                        achievement.isUnlocked = true
+                    }
+                case "datac":
+                    if model.totalBitsEarned >= 100_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum Era":
+                    if model.totalQubitsEarned >= 1{
+                        achievement.isUnlocked = true
+                    }
+                case "Automation":
+                    if model.factories.reduce(0) { $0 + $1.count } >= 1 {
+                        achievement.isUnlocked = true
+                    }
+                case "Automation2":
+                    if model.factories.reduce(0) { $0 + $1.count } >= 10 {
+                        achievement.isUnlocked = true
+                    }
+                case "Automation3":
+                    if model.factories.reduce(0) { $0 + $1.count } >= 50 {
+                        achievement.isUnlocked = true
+                    }
+
+                default:
+                    break
+                }
+            }
+            saveGameState()
+        }
 
     private func applyPrestigeUpgradeEffect(_ upgrade: PrestigeUpgradeModel) {
             switch upgrade.name {
@@ -235,7 +326,7 @@ class GameState: ObservableObject {
                         + totalOutput
                 }
                 
-                let newDescription = "Generate \(outputPerUnit) bits per second"
+                let newDescription = "Generate \(formatNumber(outputPerUnit)) bits per second"
                 model.factories[index].OverView = newDescription
                 model.personalComputerDescription = newDescription
             }
@@ -252,7 +343,7 @@ class GameState: ObservableObject {
             // Reset resources
             for i in 0..<model.resources.count {
                 model.resources[i].amount = 0
-               
+                model.resources[i].perClick = model.resources[i].name == "Bits" ? 0.1 * model.prestigeMultiplier : 0
                 model.resources[i].perSecond = 0
             }
             
@@ -265,6 +356,8 @@ class GameState: ObservableObject {
             
             model.personalComputerUnlocked = false
             model.quantumUnlocked = false
+        
+            model.factoryEfficiencyMultiplier = 1.0
         
             // Reapply effects of bought prestige upgrades
             for upgrade in model.prestigeUpgrades where upgrade.bought {
@@ -390,7 +483,7 @@ class GameState: ObservableObject {
                         + totalOutput
                 }
                 
-                let newDescription = "Generate \(outputPerUnit) bits per second"
+                let newDescription = "Generate \(formatNumber(outputPerUnit)) bits per second"
                 model.factories[index].OverView = newDescription
                 model.workstationDescription = newDescription
             }
@@ -614,6 +707,7 @@ class GameState: ObservableObject {
                     model.totalQubitsEarned += earned
                 }
             }
+            checkAchievements()
             objectWillChange.send()
         }
 }

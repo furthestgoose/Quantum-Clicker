@@ -13,6 +13,7 @@
 		0634530C2C28959F00DACD2C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0634530B2C28959F00DACD2C /* ContentView.swift */; };
 		0634530E2C2895A000DACD2C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0634530D2C2895A000DACD2C /* Assets.xcassets */; };
 		063453122C2895A000DACD2C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 063453112C2895A000DACD2C /* Preview Assets.xcassets */; };
+		063CAE552C3FE8FA0044D929 /* AchievementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 063CAE542C3FE8FA0044D929 /* AchievementModel.swift */; };
 		0679C04B2C3E93E00064A4CB /* PrestigeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0679C04A2C3E93E00064A4CB /* PrestigeView.swift */; };
 		06CA32C82C28EC2D000E806F /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32C72C28EC2D000E806F /* GameState.swift */; };
 		06CA32CA2C28EC82000E806F /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06CA32C92C28EC82000E806F /* Resource.swift */; };
@@ -33,6 +34,7 @@
 		0634530D2C2895A000DACD2C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0634530F2C2895A000DACD2C /* Quantum_Clicker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Quantum_Clicker.entitlements; sourceTree = "<group>"; };
 		063453112C2895A000DACD2C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		063CAE542C3FE8FA0044D929 /* AchievementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementModel.swift; sourceTree = "<group>"; };
 		0679C04A2C3E93E00064A4CB /* PrestigeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrestigeView.swift; sourceTree = "<group>"; };
 		06AFE6FB2C28B01E0070DBB4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		06CA32C72C28EC2D000E806F /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
@@ -83,11 +85,8 @@
 				0679C04A2C3E93E00064A4CB /* PrestigeView.swift */,
 				06CA32CF2C28ECF6000E806F /* ClickerView.swift */,
 				06CA32D72C297344000E806F /* StoreView.swift */,
-				06CA32CD2C28ECAB000E806F /* Factory.swift */,
-				06E3695D2C3F0850005284A1 /* PrestigeUpgradeModel.swift */,
-				06CA32CB2C28EC98000E806F /* Upgrade.swift */,
 				06CA32D52C28EDBE000E806F /* StatsView.swift */,
-				06CA32C92C28EC82000E806F /* Resource.swift */,
+				063CAE562C3FF43B0044D929 /* classes */,
 				06CA32C72C28EC2D000E806F /* GameState.swift */,
 				0634530D2C2895A000DACD2C /* Assets.xcassets */,
 				0634530F2C2895A000DACD2C /* Quantum_Clicker.entitlements */,
@@ -102,6 +101,18 @@
 				063453112C2895A000DACD2C /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		063CAE562C3FF43B0044D929 /* classes */ = {
+			isa = PBXGroup;
+			children = (
+				06CA32C92C28EC82000E806F /* Resource.swift */,
+				06CA32CB2C28EC98000E806F /* Upgrade.swift */,
+				06E3695D2C3F0850005284A1 /* PrestigeUpgradeModel.swift */,
+				063CAE542C3FE8FA0044D929 /* AchievementModel.swift */,
+				06CA32CD2C28ECAB000E806F /* Factory.swift */,
+			);
+			path = classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +194,7 @@
 				0679C04B2C3E93E00064A4CB /* PrestigeView.swift in Sources */,
 				06CA32D62C28EDBE000E806F /* StatsView.swift in Sources */,
 				0634530C2C28959F00DACD2C /* ContentView.swift in Sources */,
+				063CAE552C3FE8FA0044D929 /* AchievementModel.swift in Sources */,
 				0615ED9E2C3C10DB00FBE0D2 /* SplashScreenView.swift in Sources */,
 				06E3695E2C3F0850005284A1 /* PrestigeUpgradeModel.swift in Sources */,
 				0634530A2C28959F00DACD2C /* Quantum_ClickerApp.swift in Sources */,
