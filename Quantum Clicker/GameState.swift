@@ -23,9 +23,10 @@ class GameStateModel: Identifiable{
     var totalQubitsEarned: Double = 0
     var prestigeMultiplier: Double = 1.0
     var offlineEfficiency: Double?
+    var timesPrestiged: Int = 0
     var availablePrestigePoints: Int {
-            // Example calculation: 1 prestige point per 1e12 (1 trillion) bits earned
-            return Int(totalBitsEarned / 1e12)
+            // Example calculation: 1 prestige point per 1e12 (1 trillion) Qubits earned
+            return Int(totalQubitsEarned / 1e12)
         }
     @Relationship(deleteRule: .cascade) var achievements: [AchievementModel]
     @Relationship(deleteRule: .cascade) var resources: [ResourceModel]
@@ -37,7 +38,7 @@ class GameStateModel: Identifiable{
     init(id: UUID = UUID(), quantumUnlocked: Bool = false, personalComputerUnlocked: Bool = false,
          ramUpgradeBought: Bool = false, cpuUpgradeBought: Bool = false, coolingUpgradeBought: Bool = false,
          storageUpgradeBought: Bool = false, workstationCPUUpgradeBought: Bool = false, workstationRAMUpgradeBought: Bool = false,
-         workstationGPUUpgradeBought: Bool = false, workstationNetworkUpgradeBought: Bool = false) {
+         workstationGPUUpgradeBought: Bool = false, workstationNetworkUpgradeBought: Bool = false, timesPrestiged: Int = 0) {
         self.id = id
         self.quantumUnlocked = quantumUnlocked
         self.personalComputerUnlocked = personalComputerUnlocked
@@ -54,6 +55,7 @@ class GameStateModel: Identifiable{
         self.factories = []
         self.prestigeUpgrades = []
         self.achievements = []
+        self.timesPrestiged = timesPrestiged
     }
 }
 
@@ -173,7 +175,26 @@ class GameState: ObservableObject {
                 FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) bits per second"),
                 FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) bits per second"),
                 FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 20000000000, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "building", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) Qubit per second.")
+                // MARK: - Quantum Factories
+                FactoryModel(icon: "laptopcomputer", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) Qubit per second."),
+                FactoryModel(icon: "externaldrive.connected.to.line.below", name: "Quantum Annealer", cost: 1000, costResourceType: "Qubits", count: 0, OverView: "Specialized quantum device for solving optimization problems. \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "atom", name: "Trapped Ion Quantum Computer", cost: 10000, costResourceType: "Qubits", count: 0, OverView: "Uses charged atoms to store quantum information. \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "bolt.circle", name: "Superconducting Quantum Processor", cost: 100_000, costResourceType: "Qubits", count: 0, OverView: "Utilizes superconducting circuits for quantum operations. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "map", name: "Topological Quantum System", cost: 1_000_000, costResourceType: "Qubits", count: 0, OverView: "Employs exotic quantum states for more stable computation. \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "externaldrive.badge.exclamationmark", name: "Quantum Error Correction Engine", cost: 10_000_000, costResourceType: "Qubits", count: 0, OverView: "Advanced system that actively corrects quantum errors. \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "point.3.connected.trianglepath.dotted", name: "Quantum Network Node", cost: 100_000_000, costResourceType: "Qubits", count: 0, OverView: "Key component in a quantum internet infrastructure. \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "server.rack", name: "Quantum Simulator Array", cost: 1_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Large-scale system for simulating complex quantum systems. \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "globe", name: "Universal Fault-Tolerant Quantum Computer", cost: 10_000_000_000, costResourceType: "Qubits", count: 0, OverView: "The holy grail of quantum computing, capable of any quantum algorithm. \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "engine.combustion", name: "Quantum Multiverse Engine", cost: 100_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system harnessing quantum multiverse for unprecedented power. \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "cloud.circle", name: "Distributed Quantum Cloud", cost: 1_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "A global network of quantum computers working in unison. \nGenerates \(formatNumber(500000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "externaldrive.badge.icloud", name: "Quantum AI Nexus", cost: 10_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Merges quantum computing with advanced AI for unprecedented problem-solving. \nGenerates \(formatNumber(2500000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "window.ceiling.closed", name: "Quantum-Classical Hybrid Megastructure", cost: 100_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Massive facility integrating quantum and classical computing at scale. \nGenerates \(formatNumber(10000000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "door.left.hand.open", name: "Quantum Dimension Gateway", cost: 1_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system tapping into quantum dimensions for computation. \nGenerates \(formatNumber(50000000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "moon.stars", name: "Cosmic Quantum Computer", cost: 10_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(250000000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "cpu", name: "Planck-Scale Quantum Processor", cost: 100_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(1000000000 * model.prestigeMultiplier)) Qubits per second."),
+                
+
+                
             ]
         }
     
@@ -227,7 +248,7 @@ class GameState: ObservableObject {
                         achievement.isUnlocked = true
                     }
                 case "prestigeMaster":
-                    if model.prestigePoints >= 5 {
+                    if model.timesPrestiged >= 5 {
                         achievement.isUnlocked = true
                     }
                 case "myfirstbit":
@@ -335,7 +356,7 @@ class GameState: ObservableObject {
     func performPrestige() {
             let newPrestigePoints = model.availablePrestigePoints
         
-            
+            model.timesPrestiged += 1
     
             model.prestigePoints += newPrestigePoints
             model.prestigeMultiplier +=  Double(newPrestigePoints) * 0.1
@@ -365,6 +386,7 @@ class GameState: ObservableObject {
             }
         
             model.totalBitsEarned = 0
+            model.totalQubitsEarned = 0
             saveGameState()
         
             resetAfterPrestige()
@@ -532,6 +554,24 @@ class GameState: ObservableObject {
             }else{
                 return String(format: "%@%.1fB", sign, absNumber / 1_000_000_000)
             }
+        case 1_000_000_000_000..<1_000_000_000_000_000:
+            if number.truncatingRemainder(dividingBy: 1) == 0{
+                return String(format: "%@%.0fQu",sign, absNumber / 1_000_000_000_000_000)
+            }else{
+                return String(format: "%@%.1fQu",sign, absNumber / 1_000_000_000_000_000)
+            }
+        case 1_000_000_000_000_000..<1_000_000_000_000_000_000:
+            if number.truncatingRemainder(dividingBy: 1) == 0{
+                return String(format: "%@%.0fQi",sign, absNumber / 1_000_000_000_000_000_000)
+            }else{
+                return String(format: "%@%.1fQi",sign, absNumber / 1_000_000_000_000_000_000)
+            }
+        case 1_000_000_000_000_000_000..<1_000_000_000_000_000_000_000:
+            if number.truncatingRemainder(dividingBy: 1) == 0{
+                return String(format: "%@%.0fS",sign, absNumber / 1_000_000_000_000_000_000_000)
+            }else{
+                return String(format: "%@%.1fS",sign, absNumber / 1_000_000_000_000_000_000_000)
+            }
         default:
             if number.truncatingRemainder(dividingBy: 1) == 0 {
                 return String(format: "%@%.0fT",sign, absNumber / 1_000_000_000_000)
@@ -685,8 +725,39 @@ class GameState: ObservableObject {
                     model.resources[bitsIndex].perSecond += 25000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 case "Supercomputer":
                     model.resources[bitsIndex].perSecond += 100000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                    // MARK: - Quantum Factories
                 case "Basic Quantum Computer":
                     model.resources[qubitsIndex].perSecond += 0.1 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Annealer":
+                    model.resources[qubitsIndex].perSecond += 0.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Trapped Ion Quantum Computer":
+                    model.resources[qubitsIndex].perSecond += 2 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Superconducting Quantum Processor":
+                    model.resources[qubitsIndex].perSecond += 10 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Topological Quantum System":
+                    model.resources[qubitsIndex].perSecond += 50 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Error Correction Engine":
+                    model.resources[qubitsIndex].perSecond += 250 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Network Node":
+                    model.resources[qubitsIndex].perSecond += 1000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Simulator Array":
+                    model.resources[qubitsIndex].perSecond += 5000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Universal Fault-Tolerant Quantum Computer":
+                    model.resources[qubitsIndex].perSecond += 25000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Multiverse Engine":
+                    model.resources[qubitsIndex].perSecond += 100000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Distributed Quantum Cloud":
+                    model.resources[qubitsIndex].perSecond += 500000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum AI Nexus":
+                    model.resources[qubitsIndex].perSecond += 2500000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum-Classical Hybrid Megastructure":
+                    model.resources[qubitsIndex].perSecond += 10000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Quantum Dimension Gateway":
+                    model.resources[qubitsIndex].perSecond += 50000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Cosmic Quantum Computer":
+                    model.resources[qubitsIndex].perSecond += 250000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+                case "Planck-Scale Quantum Processor":
+                    model.resources[qubitsIndex].perSecond += 1000000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
                 default:
                     break
                 }

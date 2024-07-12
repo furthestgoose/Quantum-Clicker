@@ -59,6 +59,7 @@ struct ResourcesTab: View {
             Section(header: Text("Prestige")){
                 StatRow(title: "Prestige Points", value: String(gameState.model.prestigePoints))
                 StatRow(title: "Prestige Multiplier", value: String(gameState.model.prestigeMultiplier) + "%")
+                StatRow(title: "Times Prestiged", value: String(gameState.model.timesPrestiged))
             }
         }
         .listStyle(GroupedListStyle())
@@ -80,10 +81,11 @@ struct FactoriesTab: View {
         .listStyle(GroupedListStyle())
         
         var sortedFactories: [FactoryModel] {
-            let classicalFactories = gameState.model.factories.filter { $0.name != "Basic Quantum Computer" }
+            let classicalFactories = gameState.model.factories.filter { $0.name != "Basic Quantum Computer" && $0.name != "Quantum Annealer" && $0.name != "Trapped Ion Quantum Computer" && $0.name != "Superconducting Quantum Processor" && $0.name != "Topological Quantum System" && $0.name != "Quantum Error Correction Engine" && $0.name != "Quantum Network Node" && $0.name != "Quantum Simulator Array" && $0.name != "Universal Fault-Tolerant Quantum Computer" && $0.name != "Quantum Multiverse Engine" && $0.name != "Distributed Quantum Cloud" && $0.name != "Quantum AI Nexus" && $0.name != "Quantum-Classical Hybrid Megastructure" && $0.name != "Quantum Dimension Gateway" && $0.name != "Cosmic Quantum Computer" && $0.name != "Planck-Scale Quantum Processor"}
+            
             let sortedClassical = classicalFactories.sorted(by: { $0.initialCost < $1.initialCost })
             
-            if gameState.model.quantumUnlocked, let quantumComputer = gameState.model.factories.first(where: { $0.name == "Basic Quantum Computer" }) {
+            if gameState.model.quantumUnlocked, let quantumComputer = gameState.model.factories.first(where: { $0.name == "Basic Quantum Computer" && $0.name == "Quantum Annealer" && $0.name == "Trapped Ion Quantum Computer" && $0.name == "Superconducting Quantum Processor" && $0.name == "Topological Quantum System" && $0.name == "Quantum Error Correction Engine" && $0.name == "Quantum Network Node" && $0.name == "Quantum Simulator Array" && $0.name == "Universal Fault-Tolerant Quantum Computer" && $0.name == "Quantum Multiverse Engine" && $0.name == "Distributed Quantum Cloud" && $0.name == "Quantum AI Nexus" && $0.name == "Quantum-Classical Hybrid Megastructure" && $0.name == "Quantum Dimension Gateway" && $0.name == "Cosmic Quantum Computer" && $0.name == "Planck-Scale Quantum Processor"}) {
                 return sortedClassical + [quantumComputer]
             } else {
                 return sortedClassical

@@ -16,6 +16,7 @@ struct PrestigeView: View {
                     ScrollView {
                         VStack(alignment: .center, spacing: 20) {
 
+                            PrestigeInfoCard(title: "Times Prestiged", value: "\(gameState.model.timesPrestiged)")
                             PrestigeInfoCard(title: "Current Prestige Points", value: "\(gameState.model.prestigePoints)")
                             PrestigeInfoCard(title: "Current Multiplier", value: "x\(String(format: "%.2f", gameState.model.prestigeMultiplier))")
 
