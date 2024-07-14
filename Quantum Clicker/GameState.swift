@@ -106,14 +106,14 @@ class GameState: ObservableObject {
     func initializeAchievements() {
         model.achievements = [
                         AchievementModel(id: "Myfirstbit", title: "My First Bit", description: "Earn 1 bit", isUnlocked: false, order: 0),
-                        AchievementModel(id: "Automation", title: "My First Factory", description: "Own 1 factory", isUnlocked: false, order: 1),
+                        AchievementModel(id: "Automation", title: "My System", description: "Own 1 Computer", isUnlocked: false, order: 1),
                         AchievementModel(id: "Doublebit", title: "Double Digits", description: "Earn 10 bits", isUnlocked: false, order: 2),
-                        AchievementModel(id: "Automation2", title: "Advanced Production", description: "Own 10 factories", isUnlocked: false, order: 3),
+                        AchievementModel(id: "Automation2", title: "Advanced Scraping", description: "Own 10 Computers", isUnlocked: false, order: 3),
                         AchievementModel(id: "Triplebit", title: "Triple Digits", description: "Earn 100 bits", isUnlocked: false, order: 4),
                         AchievementModel(id: "Quadbit", title: "Quadruple Digits", description: "Earn 1000 bits", isUnlocked: false, order: 5),
-                        AchievementModel(id: "Automation3", title: "Mass Production", description: "Own 50 factories", isUnlocked: false, order: 6),
+                        AchievementModel(id: "Automation3", title: "Mass Scraping", description: "Own 50 Computers", isUnlocked: false, order: 6),
                         AchievementModel(id: "10kb", title: "10,000 bits", description: "Earn 10000 bits", isUnlocked: false, order: 7),
-                        AchievementModel(id: "factoryTycoon", title: "Factory Tycoon", description: "Own 100 factories", isUnlocked: false, order: 8),
+                        AchievementModel(id: "factoryTycoon", title: "Computer Tycoon", description: "Own 100 Computers", isUnlocked: false, order: 8),
                         AchievementModel(id: "datac", title: "Data Conglomerate", description: "Earn 100000 bits", isUnlocked: false, order: 9),
                         AchievementModel(id: "bitMillionaire", title: "Bit Millionaire", description: "Earn 1,000,000 bits", isUnlocked: false, order: 10),
                         AchievementModel(id: "quantumLeap", title: "Quantum Leap", description: "Unlock quantum computing", isUnlocked: false, order: 11),
@@ -189,9 +189,9 @@ class GameState: ObservableObject {
                 PrestigeUpgradeModel(icon: "multiply.circle.fill", name: "Multiplier Boost", description: "Increase your prestige multiplier by 10%", cost: 5),
                 PrestigeUpgradeModel(icon: "sparkles", name: "Starting Boost", description: "Start with 1000 bits after prestige", cost: 3),
                 PrestigeUpgradeModel(icon: "bolt.fill", name: "Click Power", description: "Double your bits per click", cost: 4),
-                PrestigeUpgradeModel(icon: "cpu", name: "Factory Efficiency", description: "All factories produce 25% more bits", cost: 7),
+                PrestigeUpgradeModel(icon: "cpu", name: "Computer Efficiency", description: "All Computers produce 25% more bits", cost: 7),
                 PrestigeUpgradeModel(icon: "hourglass", name: "Offline Progress", description: "Increase offline production efficiency to 75%", cost: 8),
-                PrestigeUpgradeModel(icon: "dollarsign.circle", name: "Cost Reduction", description: "Reduce all factory costs by 10%", cost: 10),
+                PrestigeUpgradeModel(icon: "dollarsign.circle", name: "Cost Reduction", description: "Reduce all Computer costs by 10%", cost: 10),
             ]
         }
     

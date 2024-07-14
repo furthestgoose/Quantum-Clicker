@@ -16,7 +16,7 @@ struct StatsView: View {
                     
                     Picker("", selection: $selectedTab) {
                         Text("Resources").tag(0)
-                        Text("Factories").tag(1)
+                        Text("Computers").tag(1)
                         Text("Achievements").tag(2)
                     }
                     .pickerStyle(SegmentedPickerStyle())
