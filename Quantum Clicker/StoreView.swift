@@ -199,19 +199,19 @@ struct UpgradesList: View {
                 case "RAM Upgrade":
                     return gameState.model.personalComputerUnlocked
                 case "CPU Upgrade":
-                    return gameState.personalComputerCount >= 5
+                    return gameState.factoryCount(name: "Personal Computer") >= 1
                 case "Cooling System Upgrade":
-                    return gameState.personalComputerCount >= 10
+                    return gameState.factoryCount(name: "Personal Computer") >= 1
                 case "Storage Upgrade":
-                    return gameState.personalComputerCount >= 15
+                    return gameState.factoryCount(name: "Personal Computer") >= 1
                 case "Processor Overclock":
-                    return gameState.workstationCount >= 10
+                    return gameState.factoryCount(name: "Workstation") >= 10
                 case "RAM Expansion":
-                    return gameState.workstationCount >= 25
+                    return gameState.factoryCount(name: "Workstation") >= 25
                 case "Graphics Accelerator":
-                    return gameState.workstationCount >= 50
+                    return gameState.factoryCount(name: "Workstation") >= 50
                 case "High-Speed Network Interface":
-                    return gameState.workstationCount >= 100
+                    return gameState.factoryCount(name: "Workstation") >= 100
                 case "Quantum Clicker":
                     return gameState.model.quantumUnlocked
                 default:
@@ -242,7 +242,7 @@ struct UpgradeRow: View {
                 .font(.title)
             VStack(alignment: .leading) {
                 Text(upgrade.name).font(.headline)
-                Text(upgrade.OverView).font(.subheadline)
+                Text(upgrade.overview).font(.subheadline)
             }
             Spacer()
             VStack {

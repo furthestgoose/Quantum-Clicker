@@ -2,22 +2,14 @@ import Foundation
 import SwiftData
 import BackgroundTasks
 
+
+
 @Model
 class GameStateModel: Identifiable{
     let id: UUID
     var lastUpdateTime: Date = Date()
     var quantumUnlocked: Bool
     var personalComputerUnlocked: Bool
-    var ramUpgradeBought: Bool
-    var cpuUpgradeBought: Bool
-    var coolingUpgradeBought: Bool
-    var storageUpgradeBought: Bool
-    var workstationCPUUpgradeBought: Bool
-    var workstationRAMUpgradeBought: Bool
-    var workstationGPUUpgradeBought: Bool
-    var workstationNetworkUpgradeBought: Bool
-    var personalComputerDescription: String = "A basic home computer for simple data processing \nGenerates 0.1 bits per second"
-    var workstationDescription: String = "A more powerful computer designed for professional work \nGenerates 0.5 bits per second"
     var prestigePoints: Int = 0
     var totalBitsEarned: Double = 0
     var totalQubitsEarned: Double = 0
@@ -35,21 +27,10 @@ class GameStateModel: Identifiable{
     @Relationship(deleteRule: .cascade) var prestigeUpgrades: [PrestigeUpgradeModel]
     var factoryEfficiencyMultiplier: Double = 1.0
     
-    init(id: UUID = UUID(), quantumUnlocked: Bool = false, personalComputerUnlocked: Bool = false,
-         ramUpgradeBought: Bool = false, cpuUpgradeBought: Bool = false, coolingUpgradeBought: Bool = false,
-         storageUpgradeBought: Bool = false, workstationCPUUpgradeBought: Bool = false, workstationRAMUpgradeBought: Bool = false,
-         workstationGPUUpgradeBought: Bool = false, workstationNetworkUpgradeBought: Bool = false, timesPrestiged: Int = 0) {
+    init(id: UUID = UUID(), quantumUnlocked: Bool = false, personalComputerUnlocked: Bool = false,timesPrestiged: Int = 0) {
         self.id = id
         self.quantumUnlocked = quantumUnlocked
         self.personalComputerUnlocked = personalComputerUnlocked
-        self.ramUpgradeBought = ramUpgradeBought
-        self.cpuUpgradeBought = cpuUpgradeBought
-        self.coolingUpgradeBought = coolingUpgradeBought
-        self.storageUpgradeBought = storageUpgradeBought
-        self.workstationCPUUpgradeBought = workstationCPUUpgradeBought
-        self.workstationRAMUpgradeBought = workstationRAMUpgradeBought
-        self.workstationGPUUpgradeBought = workstationGPUUpgradeBought
-        self.workstationNetworkUpgradeBought = workstationNetworkUpgradeBought
         self.resources = []
         self.upgrades = []
         self.factories = []
@@ -117,7 +98,7 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 0, perClick: 0.1, perSecond: 0),
+            ResourceModel(name: "Bits", amount: 100000, perClick: 0.1, perSecond: 0),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
     }
@@ -143,55 +124,58 @@ class GameState: ObservableObject {
     
     private func initializeUpgrades() {
             model.upgrades = [
-                UpgradeModel(icon: "creditcard", name: "Premium Licence", cost: 20, costResourceType: "Bits", description: "You buy the Premium Software Licence \nIncrease bits per click by \(formatNumber(0.1 * model.prestigeMultiplier))"),
-                UpgradeModel(icon: "cursorarrow.click", name: "Double Clicks", cost: 100, costResourceType: "Bits", description: "Double the number of bits per click"),
-                UpgradeModel(icon: "cursorarrow.click.badge.clock", name: "Autoclicker", cost: 500, costResourceType: "Bits", description: "Automatically generate \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second"),
-                UpgradeModel(icon: "cursorarrow.click.2", name: "Triple Clicks", cost: 2000, costResourceType: "Bits", description: "Triple the number of bits per click"),
-                UpgradeModel(icon: "dot.circle.and.cursorarrow", name: "Precision Clicking", cost: 10000, costResourceType: "Bits", description: "Increase bits per click by \(formatNumber(0.2 * model.prestigeMultiplier)) through improved accuracy"),
-                UpgradeModel(icon: "cursorarrow.motionlines", name: "Quantum Clicker", cost: 1000000, costResourceType: "Bits", description: "Each click has a small chance to produce a qubit"),
-                UpgradeModel(icon: "apple.terminal", name: "Automated Clicking Software", cost: 5000000, costResourceType: "Bits", description: "Increase the autoclicker speed to \(formatNumber(0.2 * model.prestigeMultiplier)) bits per second"),
-                UpgradeModel(icon: "network", name: "Network Clicks", cost: 20000000, costResourceType: "Bits", description: "Each click generates bits for every connected device, increasing bits per click by \(formatNumber(0.5 * model.prestigeMultiplier))"),
-                UpgradeModel(icon: "memorychip", name: "RAM Upgrade", cost: 1000, costResourceType: "Bits", description: "Faster RAM is installed \nPersonal Computers are 1.5x faster"),
-                UpgradeModel(icon: "cpu", name: "CPU Upgrade", cost: 5000, costResourceType: "Bits", description: "The CPU is upgraded \nPersonal Computers are 2x faster"),
-                UpgradeModel(icon: "fan", name: "Cooling System Upgrade", cost: 20000, costResourceType: "Bits", description: "The Cooling System is upgraded \nPersonal Computers are 1.25x faster"),
-                UpgradeModel(icon: "externaldrive", name: "Storage Upgrade", cost: 100000, costResourceType: "Bits", description: "The Storage is upgraded \nPersonal Computers are 1.5x faster"),
-                UpgradeModel(icon: "clock.arrow.circlepath", name: "Processor Overclock", cost: 10000, costResourceType: "Bits", description: "Enhanced CPU performance \nWorkstations are 1.5x faster"),
-                UpgradeModel(icon: "memorychip", name: "RAM Expansion", cost: 50000, costResourceType: "Bits", description: "Increased memory capacity \nWorkstations are 2x faster"),
-                UpgradeModel(icon: "gamecontroller", name: "Graphics Accelerator", cost: 200000, costResourceType: "Bits", description: "Advanced GPU for improved processing \nWorkstations are 1.25x faster"),
-                UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 1000000, costResourceType: "Bits", description: "Improved data transfer capabilities \nWorkstations are 1.5x faster"),
-                UpgradeModel(icon: "testtube.2", name: "Quantum Research Lab", cost: 10000000000, costResourceType: "Bits", description: "Unlocks the Quantum Era")
+                UpgradeModel(icon: "creditcard", name: "Premium Licence", cost: 20, costResourceType: "Bits", description: "You buy the Premium Software Licence \nIncrease bits per click by \(formatNumber(0.1 * model.prestigeMultiplier))", upgradeType: .resourcePerClick("Bits", 0.1)),
+                
+                UpgradeModel(icon: "cursorarrow.click", name: "Double Clicks", cost: 100, costResourceType: "Bits", description: "Double the number of bits per click", upgradeType: .other("Double Clicks")),
+                
+                UpgradeModel(icon: "cursorarrow.click.badge.clock", name: "Autoclicker", cost: 500, costResourceType: "Bits", description: "Automatically generate \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second", upgradeType: .resourcePerSecond("Bits", 0.1)),
+                
+                UpgradeModel(icon: "cursorarrow.click.2", name: "Triple Clicks", cost: 2000, costResourceType: "Bits", description: "Triple the number of bits per click", upgradeType: .other("Triple Clicks")),
+                UpgradeModel(icon: "dot.circle.and.cursorarrow", name: "Precision Clicking", cost: 10000, costResourceType: "Bits", description: "Increase bits per click by \(formatNumber(0.2 * model.prestigeMultiplier)) through improved accuracy" , upgradeType: .resourcePerClick("Bits", 0.2)),
+                UpgradeModel(icon: "cursorarrow.motionlines", name: "Quantum Clicker", cost: 1000000, costResourceType: "Bits", description: "Each click has a small chance to produce a qubit", upgradeType: .resourcePerClick("Qubits", 0.1)),
+                UpgradeModel(icon: "apple.terminal", name: "Automated Clicking Software", cost: 5000000, costResourceType: "Bits", description: "Increase the autoclicker speed to \(formatNumber(0.2 * model.prestigeMultiplier)) bits per second",upgradeType: .resourcePerSecond("Bits", 0.2)),
+                UpgradeModel(icon: "network", name: "Network Clicks", cost: 20000000, costResourceType: "Bits", description: "Each click generates bits for every connected device, increasing bits per click by \(formatNumber(0.5 * model.prestigeMultiplier))", upgradeType: .resourcePerClick("Bits", 0.5)),
+                UpgradeModel(icon: "memorychip", name: "RAM Upgrade", cost: 1000, costResourceType: "Bits", description: "Faster RAM is installed \nPersonal Computers are 1.5x faster", upgradeType: .factoryEfficiency("Personal Computer", 1.5)),
+                UpgradeModel(icon: "cpu", name: "CPU Upgrade", cost: 5000, costResourceType: "Bits", description: "The CPU is upgraded \nPersonal Computers are 2x faster", upgradeType: .factoryEfficiency("Personal Computer", 2.0)),
+                UpgradeModel(icon: "fan", name: "Cooling System Upgrade", cost: 20000, costResourceType: "Bits", description: "The Cooling System is upgraded \nPersonal Computers are 1.25x faster", upgradeType: .factoryEfficiency("Personal Computer", 1.25)),
+                UpgradeModel(icon: "externaldrive", name: "Storage Upgrade", cost: 100000, costResourceType: "Bits", description: "The Storage is upgraded \nPersonal Computers are 1.5x faster", upgradeType: .factoryEfficiency("Personal Computer", 1.5)),
+                UpgradeModel(icon: "clock.arrow.circlepath", name: "Processor Overclock", cost: 10000, costResourceType: "Bits", description: "Enhanced CPU performance \nWorkstations are 1.5x faster", upgradeType: .factoryEfficiency("Workstation", 1.5)),
+                UpgradeModel(icon: "memorychip", name: "RAM Expansion", cost: 50000, costResourceType: "Bits", description: "Increased memory capacity \nWorkstations are 2x faster", upgradeType: .factoryEfficiency("Workstation", 2)),
+                UpgradeModel(icon: "gamecontroller", name: "Graphics Accelerator", cost: 200000, costResourceType: "Bits", description: "Advanced GPU for improved processing \nWorkstations are 1.25x faster", upgradeType: .factoryEfficiency("Workstation", 1.25)),
+                UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 1000000, costResourceType: "Bits", description: "Improved data transfer capabilities \nWorkstations are 1.5x faster", upgradeType: .factoryEfficiency("Workstation", 1.5)),
+                UpgradeModel(icon: "testtube.2", name: "Quantum Research Lab", cost: 10000000000, costResourceType: "Bits", description: "Unlocks the Quantum Era", upgradeType: .unlockResource("Qubits"))
             ]
         }
     
     private func initializeFactories() {
             model.factories = [
-                FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 200, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 2000, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "server.rack", name: "Server Rack", cost: 20000, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "cloud", name: "Server Farm", cost: 200000, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "cpu", name: "Mainframe", cost: 2000000, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 20000000, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) bits per second"),
-                FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 20000000000, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) bits per second"),
+                FactoryModel(icon: "pc", name: "Personal Computer", cost: 15, costResourceType: "Bits", count: 0, OverView: "A basic home computer for simple data processing \nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) bits per second", baseOutput: 0.1),
+                FactoryModel(icon: "desktopcomputer", name: "Workstation", cost: 200, costResourceType: "Bits", count: 0, OverView: "A more powerful computer designed for professional work \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) bits per second", baseOutput: 0.5),
+                FactoryModel(icon: "wifi.router", name: "Mini Server", cost: 2000, costResourceType: "Bits", count: 0, OverView: "A small server suitable for a home or small office \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) bits per second", baseOutput: 2),
+                FactoryModel(icon: "server.rack", name: "Server Rack", cost: 20000, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) bits per second", baseOutput: 10),
+                FactoryModel(icon: "cloud", name: "Server Farm", cost: 200000, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) bits per second", baseOutput: 50),
+                FactoryModel(icon: "cpu", name: "Mainframe", cost: 2000000, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) bits per second", baseOutput: 250),
+                FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 20000000, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) bits per second", baseOutput: 1000),
+                FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) bits per second", baseOutput: 5000),
+                FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) bits per second", baseOutput: 25000),
+                FactoryModel(icon: "bolt.fill", name: "Supercomputer", cost: 20000000000, costResourceType: "Bits", count: 0, OverView: "Cutting-edge high-performance computing system for the most demanding computational tasks \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) bits per second", baseOutput: 100000),
                 // MARK: - Quantum Factories
-                FactoryModel(icon: "laptopcomputer", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) Qubit per second."),
-                FactoryModel(icon: "externaldrive.connected.to.line.below", name: "Quantum Annealer", cost: 1000, costResourceType: "Qubits", count: 0, OverView: "Specialized quantum device for solving optimization problems. \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "atom", name: "Trapped Ion Quantum Computer", cost: 10000, costResourceType: "Qubits", count: 0, OverView: "Uses charged atoms to store quantum information. \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "bolt.circle", name: "Superconducting Quantum Processor", cost: 100_000, costResourceType: "Qubits", count: 0, OverView: "Utilizes superconducting circuits for quantum operations. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "map", name: "Topological Quantum System", cost: 1_000_000, costResourceType: "Qubits", count: 0, OverView: "Employs exotic quantum states for more stable computation. \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "externaldrive.badge.exclamationmark", name: "Quantum Error Correction Engine", cost: 10_000_000, costResourceType: "Qubits", count: 0, OverView: "Advanced system that actively corrects quantum errors. \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "point.3.connected.trianglepath.dotted", name: "Quantum Network Node", cost: 100_000_000, costResourceType: "Qubits", count: 0, OverView: "Key component in a quantum internet infrastructure. \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "server.rack", name: "Quantum Simulator Array", cost: 1_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Large-scale system for simulating complex quantum systems. \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "globe", name: "Universal Fault-Tolerant Quantum Computer", cost: 10_000_000_000, costResourceType: "Qubits", count: 0, OverView: "The holy grail of quantum computing, capable of any quantum algorithm. \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "engine.combustion", name: "Quantum Multiverse Engine", cost: 100_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system harnessing quantum multiverse for unprecedented power. \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "cloud.circle", name: "Distributed Quantum Cloud", cost: 1_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "A global network of quantum computers working in unison. \nGenerates \(formatNumber(500000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "externaldrive.badge.icloud", name: "Quantum AI Nexus", cost: 10_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Merges quantum computing with advanced AI for unprecedented problem-solving. \nGenerates \(formatNumber(2500000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "window.ceiling.closed", name: "Quantum-Classical Hybrid Megastructure", cost: 100_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Massive facility integrating quantum and classical computing at scale. \nGenerates \(formatNumber(10000000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "door.left.hand.open", name: "Quantum Dimension Gateway", cost: 1_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system tapping into quantum dimensions for computation. \nGenerates \(formatNumber(50000000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "moon.stars", name: "Cosmic Quantum Computer", cost: 10_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(250000000 * model.prestigeMultiplier)) Qubits per second."),
-                FactoryModel(icon: "cpu", name: "Planck-Scale Quantum Processor", cost: 100_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(1000000000 * model.prestigeMultiplier)) Qubits per second."),
+                FactoryModel(icon: "laptopcomputer", name: "Basic Quantum Computer", cost: 100, costResourceType: "Qubits", count: 0, OverView: "An entry-level quantum computing system capable of executing fundamental quantum algorithms.\nGenerates \(formatNumber(0.1 * model.prestigeMultiplier)) Qubit per second.", baseOutput: 0.1),
+                FactoryModel(icon: "externaldrive.connected.to.line.below", name: "Quantum Annealer", cost: 1000, costResourceType: "Qubits", count: 0, OverView: "Specialized quantum device for solving optimization problems. \nGenerates \(formatNumber(0.5 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 0.5),
+                FactoryModel(icon: "atom", name: "Trapped Ion Quantum Computer", cost: 10000, costResourceType: "Qubits", count: 0, OverView: "Uses charged atoms to store quantum information. \nGenerates \(formatNumber(2 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 2),
+                FactoryModel(icon: "bolt.circle", name: "Superconducting Quantum Processor", cost: 100_000, costResourceType: "Qubits", count: 0, OverView: "Utilizes superconducting circuits for quantum operations. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 10),
+                FactoryModel(icon: "map", name: "Topological Quantum System", cost: 1_000_000, costResourceType: "Qubits", count: 0, OverView: "Employs exotic quantum states for more stable computation. \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 50),
+                FactoryModel(icon: "externaldrive.badge.exclamationmark", name: "Quantum Error Correction Engine", cost: 10_000_000, costResourceType: "Qubits", count: 0, OverView: "Advanced system that actively corrects quantum errors. \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 250),
+                FactoryModel(icon: "point.3.connected.trianglepath.dotted", name: "Quantum Network Node", cost: 100_000_000, costResourceType: "Qubits", count: 0, OverView: "Key component in a quantum internet infrastructure. \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 1000),
+                FactoryModel(icon: "server.rack", name: "Quantum Simulator Array", cost: 1_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Large-scale system for simulating complex quantum systems. \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 5000),
+                FactoryModel(icon: "globe", name: "Universal Fault-Tolerant Quantum Computer", cost: 10_000_000_000, costResourceType: "Qubits", count: 0, OverView: "The holy grail of quantum computing, capable of any quantum algorithm. \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 25000),
+                FactoryModel(icon: "engine.combustion", name: "Quantum Multiverse Engine", cost: 100_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system harnessing quantum multiverse for unprecedented power. \nGenerates \(formatNumber(100000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 100000),
+                FactoryModel(icon: "cloud.circle", name: "Distributed Quantum Cloud", cost: 1_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "A global network of quantum computers working in unison. \nGenerates \(formatNumber(500000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 500000),
+                FactoryModel(icon: "externaldrive.badge.icloud", name: "Quantum AI Nexus", cost: 10_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Merges quantum computing with advanced AI for unprecedented problem-solving. \nGenerates \(formatNumber(2500000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 2500000),
+                FactoryModel(icon: "window.ceiling.closed", name: "Quantum-Classical Hybrid Megastructure", cost: 100_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Massive facility integrating quantum and classical computing at scale. \nGenerates \(formatNumber(10000000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 10000000),
+                FactoryModel(icon: "door.left.hand.open", name: "Quantum Dimension Gateway", cost: 1_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Theoretical system tapping into quantum dimensions for computation. \nGenerates \(formatNumber(50000000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 50000000),
+                FactoryModel(icon: "moon.stars", name: "Cosmic Quantum Computer", cost: 10_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(250000000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 250000000),
+                FactoryModel(icon: "cpu", name: "Planck-Scale Quantum Processor", cost: 100_000_000_000_000_000, costResourceType: "Qubits", count: 0, OverView: "Harnesses cosmic phenomena for quantum operations on an astronomical scale. \nGenerates \(formatNumber(1000000000 * model.prestigeMultiplier)) Qubits per second.", baseOutput: 1000000000),
                 
 
                 
@@ -211,12 +195,8 @@ class GameState: ObservableObject {
             ]
         }
     
-    var personalComputerCount: Int {
-        model.factories.first { $0.name == "Personal Computer" }?.count ?? 0
-    }
-    
-    var workstationCount: Int {
-        model.factories.first { $0.name == "Workstation" }?.count ?? 0
+    func factoryCount(name: String) -> Int{
+        return model.factories.first { $0.name == name }?.count ?? 0
     }
     
     func canBuyPrestigeUpgrade(_ upgrade: PrestigeUpgradeModel) -> Bool {
@@ -244,7 +224,7 @@ class GameState: ObservableObject {
                         achievement.isUnlocked = true
                     }
                 case "factoryTycoon":
-                    if model.factories.reduce(0) { $0 + $1.count } >= 100 {
+                    if model.factories.reduce(0, { $0 + $1.count }) >= 100 {
                         achievement.isUnlocked = true
                     }
                 case "prestigeMaster":
@@ -280,15 +260,15 @@ class GameState: ObservableObject {
                         achievement.isUnlocked = true
                     }
                 case "Automation":
-                    if model.factories.reduce(0) { $0 + $1.count } >= 1 {
+                    if model.factories.reduce(0, { $0 + $1.count }) >= 1 {
                         achievement.isUnlocked = true
                     }
                 case "Automation2":
-                    if model.factories.reduce(0) { $0 + $1.count } >= 10 {
+                    if model.factories.reduce(0, { $0 + $1.count }) >= 10 {
                         achievement.isUnlocked = true
                     }
                 case "Automation3":
-                    if model.factories.reduce(0) { $0 + $1.count } >= 50 {
+                    if model.factories.reduce(0, { $0 + $1.count }) >= 50 {
                         achievement.isUnlocked = true
                     }
 
@@ -335,24 +315,19 @@ class GameState: ObservableObject {
             }
         }
     
-    func updatePersonalComputerOutput(multiplier: Double) {
-            if let index = model.factories.firstIndex(where: { $0.name == "Personal Computer" }) {
-                let baseOutput = 0.1 * model.prestigeMultiplier
-                let outputPerUnit = baseOutput * multiplier
-                let totalOutput = outputPerUnit * Double(model.factories[index].count)
-                
-                if let resourceIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[resourceIndex].perSecond = model.resources[resourceIndex].perSecond
-                        - (baseOutput * Double(model.factories[index].count))
-                        + totalOutput
-                }
-                
-                let newDescription = "Generate \(formatNumber(outputPerUnit)) bits per second"
-                model.factories[index].OverView = newDescription
-                model.personalComputerDescription = newDescription
-            }
+    private func updateFactoryOutput(factoryIndex: Int) {
+        let factory = model.factories[factoryIndex]
+        let baseOutput = factory.baseOutput
+        let updatedOutput = baseOutput * factory.efficiency
+        
+        if let resourceIndex = model.resources.firstIndex(where: { $0.name == factory.costResourceType }) {
+            model.resources[resourceIndex].perSecond += (updatedOutput * Double(factory.count)) - factory.baseOutput
         }
-    
+        factory.baseOutput = updatedOutput
+        factory.OverView = "Generates \(formatNumber(updatedOutput)) \(factory.costResourceType) per second"
+        saveGameState()
+    }
+
     func performPrestige() {
             let newPrestigePoints = model.availablePrestigePoints
         
@@ -430,37 +405,11 @@ class GameState: ObservableObject {
                 updateFactoryDescription(factory)
             }
         }
+    
     private func updateFactoryDescription(_ factory: FactoryModel) {
-            let baseOutput = getBaseOutput(for: factory.name)
+            let baseOutput = factory.baseOutput
             let upgradedOutput = baseOutput * model.factoryEfficiencyMultiplier * model.prestigeMultiplier
             factory.OverView = "Generates \(formatNumber(upgradedOutput)) \(factory.name == "Basic Quantum Computer" ? "qubits" : "bits") per second"
-        }
-    
-    private func getBaseOutput(for factoryName: String) -> Double {
-            switch factoryName {
-            case "Personal Computer":
-                return 0.1
-            case "Workstation":
-                return 0.5
-            case "Mini Server":
-                return 2
-            case "Server Rack":
-                return 10
-            case "Server Farm":
-                return 50
-            case "Mainframe":
-                return 250
-            case "Vector Processor":
-                return 1000
-            case "Parallel Processing Array":
-                return 5000
-            case "Neural Network Computer":
-                return 25000
-            case "Supercomputer":
-                return 100000
-            default:
-                return 0
-            }
         }
     
     func calculateOfflineProgress() {
@@ -493,23 +442,6 @@ class GameState: ObservableObject {
             }
         }
     
-    func updateWorkstation(multiplier: Double) {
-            if let index = model.factories.firstIndex(where: { $0.name == "Workstation" }) {
-                let baseOutput = 0.5 * model.prestigeMultiplier
-                let outputPerUnit = baseOutput * multiplier
-                let totalOutput = outputPerUnit * Double(model.factories[index].count)
-                
-                if let resourceIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[resourceIndex].perSecond = model.resources[resourceIndex].perSecond
-                        - (baseOutput * Double(model.factories[index].count))
-                        + totalOutput
-                }
-                
-                let newDescription = "Generate \(formatNumber(outputPerUnit)) bits per second"
-                model.factories[index].OverView = newDescription
-                model.workstationDescription = newDescription
-            }
-        }
     
     func click() {
             if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
@@ -534,7 +466,7 @@ class GameState: ObservableObject {
             if number.truncatingRemainder(dividingBy: 1) == 0 {
                 return String(format: "%@%.0f",sign, absNumber)
             }else{
-                return String(format: "%@%.1f", sign, absNumber)
+                return String(format: "%@%.2f", sign, absNumber)
             }
         case 1000..<1_000_000:
             if number.truncatingRemainder(dividingBy: 1) == 0 {
@@ -592,73 +524,69 @@ class GameState: ObservableObject {
         }
     }
     
-    private func applyUpgradeEffect(_ upgrade: UpgradeModel) {
-            switch upgrade.name {
-            case "Quantum Research Lab":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-                    model.resources[bitsIndex].perClick += 0.01 * model.prestigeMultiplier
-                }
-                model.quantumUnlocked = true
-            case "Premium Licence":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.1 * model.prestigeMultiplier
-                }
-            case "Double Clicks":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick *= 2
-                }
-            case "Autoclicker":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perSecond += 0.1 * model.prestigeMultiplier
-                }
-            case "Triple Clicks":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick *= 3 * model.prestigeMultiplier
-                }
-            case "Precision Clicking":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.1 * model.prestigeMultiplier
-                }
-            case "Quantum Clicker":
-                if let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-                    model.resources[qubitsIndex].perClick += 0.01 * model.prestigeMultiplier
-                }
-            case "Automated Clicking Software":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perSecond += 0.1 * model.prestigeMultiplier
-                }
-            case "Network Clicks":
-                if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
-                    model.resources[bitsIndex].perClick += 0.2 * model.prestigeMultiplier
-                }
-            case "RAM Upgrade":
-                model.ramUpgradeBought = true
-                updatePersonalComputerOutput(multiplier: 1.5)
-            case "CPU Upgrade":
-                model.cpuUpgradeBought = true
-                updatePersonalComputerOutput(multiplier: 3)
-            case "Cooling System Upgrade":
-                model.coolingUpgradeBought = true
-                updatePersonalComputerOutput(multiplier: 3.75)
-            case "Storage Upgrade":
-                model.storageUpgradeBought = true
-                updatePersonalComputerOutput(multiplier: 5.625)
-            case "Processor Overclock":
-                model.workstationCPUUpgradeBought = true
-                updateWorkstation(multiplier: 1.5)
-            case "RAM Expansion":
-                model.workstationRAMUpgradeBought = true
-                updateWorkstation(multiplier: 3)
-            case "Graphics Accelerator":
-                model.workstationGPUUpgradeBought = true
-                updateWorkstation(multiplier: 3.75)
-            case "High-Speed Network Interface":
-                model.workstationNetworkUpgradeBought = true
-                updateWorkstation(multiplier: 5.625)
-            default:
-                break
-            }
+    func applyUpgradeEffect(_ upgrade: UpgradeModel) {
+        switch upgrade.upgradeType {
+        case .factoryEfficiency(let factoryName, let multiplier):
+            applyFactoryEfficiencyUpgrade(factoryName: factoryName, multiplier: multiplier)
+        case .resourcePerClick(let resourceName, let amount):
+            applyResourcePerClickUpgrade(resourceName: resourceName, amount: amount)
+        case .resourcePerSecond(let resourceName, let amount):
+            applyResourcePerSecondUpgrade(resourceName: resourceName, amount: amount)
+        case .unlockResource(let resourceName):
+            unlockResource(resourceName: resourceName)
+        case .other(let description):
+            applyOtherUpgrade(description: description)
         }
+    }
+    
+    private func applyFactoryEfficiencyUpgrade(factoryName: String, multiplier: Double) {
+        if let factoryIndex = model.factories.firstIndex(where: { $0.name == factoryName }) {
+            let currentEfficiency = model.factories[factoryIndex].efficiency
+            model.factories[factoryIndex].efficiency = currentEfficiency * multiplier
+            updateFactoryOutput(factoryIndex: factoryIndex)
+            model.factories[factoryIndex].efficiency = currentEfficiency
+        }
+    }
+
+    private func applyResourcePerClickUpgrade(resourceName: String, amount: Double) {
+        if let resourceIndex = model.resources.firstIndex(where: { $0.name == resourceName }) {
+            model.resources[resourceIndex].perClick += amount * model.prestigeMultiplier
+        }
+    }
+
+    private func applyResourcePerSecondUpgrade(resourceName: String, amount: Double) {
+        if let resourceIndex = model.resources.firstIndex(where: { $0.name == resourceName }) {
+            model.resources[resourceIndex].perSecond += amount * model.prestigeMultiplier
+        }
+    }
+    
+    
+    private func unlockResource(resourceName: String) {
+        switch resourceName {
+        case "Qubits":
+            model.quantumUnlocked = true
+        // Add other resources as needed
+        default:
+            break
+        }
+    }
+    
+    private func applyOtherUpgrade(description: String) {
+        // Handle other types of upgrades that don't fit into the above categories
+        switch description {
+        case "Double Clicks":
+            if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                model.resources[bitsIndex].perClick *= 2
+            }
+        case "Triple Clicks":
+            if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }) {
+                model.resources[bitsIndex].perClick *= 3
+            }
+        // Add other specific upgrades as needed
+        default:
+            break
+        }
+    }
     
     func buyFactory(_ factoryIndex: Int, quantity: Int = 1) {
         guard factoryIndex < model.factories.count else { return }
@@ -678,91 +606,36 @@ class GameState: ObservableObject {
     }
     
     private func applyFactoryEffect(_ factory: FactoryModel) {
-            if let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }), let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
-                switch factory.name {
-                case "Personal Computer":
-                    let output: Double
-                    if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought && model.storageUpgradeBought {
-                        output = 0.5625 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.ramUpgradeBought && model.cpuUpgradeBought && model.coolingUpgradeBought {
-                        output = 0.375 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.ramUpgradeBought && model.cpuUpgradeBought {
-                        output = 0.3 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.ramUpgradeBought {
-                        output = 0.15 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else {
-                        output = 0.1 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    }
-                    model.resources[bitsIndex].perSecond += output
-                    model.personalComputerUnlocked = true
-                case "Workstation":
-                    let output: Double
-                    if model.workstationCPUUpgradeBought && model.workstationGPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationNetworkUpgradeBought {
-                        output = 2.8125 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought && model.workstationGPUUpgradeBought {
-                        output = 1.875 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.workstationCPUUpgradeBought && model.workstationRAMUpgradeBought {
-                        output = 1.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else if model.workstationCPUUpgradeBought {
-                        output = 0.75 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    } else {
-                        output = 0.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    }
-                    model.resources[bitsIndex].perSecond += output
-                case "Mini Server":
-                    model.resources[bitsIndex].perSecond += 2 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Server Rack":
-                    model.resources[bitsIndex].perSecond += 10 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Server Farm":
-                    model.resources[bitsIndex].perSecond += 50 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Mainframe":
-                    model.resources[bitsIndex].perSecond += 250 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Vector Processor":
-                    model.resources[bitsIndex].perSecond += 1000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Parallel Processing Array":
-                    model.resources[bitsIndex].perSecond += 5000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Neural Network Computer":
-                    model.resources[bitsIndex].perSecond += 25000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Supercomputer":
-                    model.resources[bitsIndex].perSecond += 100000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                    // MARK: - Quantum Factories
-                case "Basic Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 0.1 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Annealer":
-                    model.resources[qubitsIndex].perSecond += 0.5 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Trapped Ion Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 2 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Superconducting Quantum Processor":
-                    model.resources[qubitsIndex].perSecond += 10 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Topological Quantum System":
-                    model.resources[qubitsIndex].perSecond += 50 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Error Correction Engine":
-                    model.resources[qubitsIndex].perSecond += 250 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Network Node":
-                    model.resources[qubitsIndex].perSecond += 1000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Simulator Array":
-                    model.resources[qubitsIndex].perSecond += 5000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Universal Fault-Tolerant Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 25000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Multiverse Engine":
-                    model.resources[qubitsIndex].perSecond += 100000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Distributed Quantum Cloud":
-                    model.resources[qubitsIndex].perSecond += 500000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum AI Nexus":
-                    model.resources[qubitsIndex].perSecond += 2500000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum-Classical Hybrid Megastructure":
-                    model.resources[qubitsIndex].perSecond += 10000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Quantum Dimension Gateway":
-                    model.resources[qubitsIndex].perSecond += 50000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Cosmic Quantum Computer":
-                    model.resources[qubitsIndex].perSecond += 250000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                case "Planck-Scale Quantum Processor":
-                    model.resources[qubitsIndex].perSecond += 1000000000 * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
-                default:
-                    break
-                }
-            }
+        guard let bitsIndex = model.resources.firstIndex(where: { $0.name == "Bits" }),
+              let qubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) else {
+            return
         }
+
+        func updateResource(for resourceIndex: Int, with baseOutput: Double) {
+            model.resources[resourceIndex].perSecond += baseOutput * model.prestigeMultiplier * model.factoryEfficiencyMultiplier
+            print(baseOutput * model.prestigeMultiplier * model.factoryEfficiencyMultiplier)
+        }
+
+        switch factory.name {
+        case "Personal Computer":
+            updateResource(for: bitsIndex, with: factory.baseOutput)
+            model.personalComputerUnlocked = true
+        case "Workstation", "Mini Server", "Server Rack", "Server Farm",
+             "Mainframe", "Vector Processor", "Parallel Processing Array",
+             "Neural Network Computer", "Supercomputer":
+            updateResource(for: bitsIndex, with: factory.baseOutput)
+        case "Basic Quantum Computer", "Quantum Annealer", "Trapped Ion Quantum Computer",
+             "Superconducting Quantum Processor", "Topological Quantum System",
+             "Quantum Error Correction Engine", "Quantum Network Node", "Quantum Simulator Array",
+             "Universal Fault-Tolerant Quantum Computer", "Quantum Multiverse Engine",
+             "Distributed Quantum Cloud", "Quantum AI Nexus", "Quantum-Classical Hybrid Megastructure",
+             "Quantum Dimension Gateway", "Cosmic Quantum Computer", "Planck-Scale Quantum Processor":
+            updateResource(for: qubitsIndex, with: factory.baseOutput)
+        default:
+            break
+        }
+    }
+
     
     func update() {
             for i in 0..<model.resources.count {

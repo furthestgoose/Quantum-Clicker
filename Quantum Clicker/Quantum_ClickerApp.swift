@@ -20,7 +20,7 @@ struct Quantum_ClickerApp: App {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(for: GameStateModel.self)
+        .modelContainer(for: [GameStateModel.self, UpgradeModel.self])
         .onChange(of: scenePhase) { newPhase in
             if newPhase == .background {
                 UserDefaults.standard.set(Date(), forKey: "terminationTime")

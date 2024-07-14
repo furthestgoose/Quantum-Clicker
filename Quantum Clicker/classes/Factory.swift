@@ -18,8 +18,10 @@ class FactoryModel: Identifiable {
     var costResourceType: String
     var count: Int
     var OverView: String
+    var efficiency: Double = 1.0
+    var baseOutput: Double
     
-    init(icon: String, name: String, cost: Double, costResourceType: String, count: Int, OverView: String) {
+    init(icon: String, name: String, cost: Double, costResourceType: String, count: Int, OverView: String, baseOutput: Double) {
         self.id = UUID()
         self.icon = icon
         self.name = name
@@ -28,5 +30,6 @@ class FactoryModel: Identifiable {
         self.costResourceType = costResourceType
         self.count = count
         self.OverView = OverView
+        self.baseOutput = baseOutput
     }
 }
