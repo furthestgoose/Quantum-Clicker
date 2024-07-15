@@ -98,7 +98,7 @@ class GameState: ObservableObject {
     
     private func initializeResources() {
         model.resources = [
-            ResourceModel(name: "Bits", amount: 100000, perClick: 0.1, perSecond: 0),
+            ResourceModel(name: "Bits", amount: 100_000_000_000, perClick: 0.1, perSecond: 0),
             ResourceModel(name: "Qubits", amount: 0, perClick: 0, perSecond: 0)
         ]
     }
@@ -116,9 +116,23 @@ class GameState: ObservableObject {
                         AchievementModel(id: "factoryTycoon", title: "Computer Tycoon", description: "Own 100 Computers", isUnlocked: false, order: 8),
                         AchievementModel(id: "datac", title: "Data Conglomerate", description: "Earn 100000 bits", isUnlocked: false, order: 9),
                         AchievementModel(id: "bitMillionaire", title: "Bit Millionaire", description: "Earn 1,000,000 bits", isUnlocked: false, order: 10),
-                        AchievementModel(id: "quantumLeap", title: "Quantum Leap", description: "Unlock quantum computing", isUnlocked: false, order: 11),
-                        AchievementModel(id: "Quantum Era", title: "Welcome to the quantum era", description: "earn 1 qubit", isUnlocked: false, order: 12),
-                        AchievementModel(id: "prestigeMaster", title: "Prestige Master", description: "Prestige 5 times", isUnlocked: false, order: 13),
+                        AchievementModel(id: "bitMultiMillionaire", title: "Bit Multi Millionaire", description: "Earn 2,000,000 bits", isUnlocked: false, order: 11),
+                        AchievementModel(id: "bit500m", title: "Data King", description: "Earn 500,000,000 bits", isUnlocked: false, order: 12),
+                        AchievementModel(id: "bit1b", title: "Bit Billionaire", description: "Earn 1,000,000,000 bits", isUnlocked: false, order: 13),
+                        AchievementModel(id: "bit1t", title: "Bit Trillionaire", description: "Earn 1,00,000,000,000 bits", isUnlocked: false, order: 14),
+                        AchievementModel(id: "quantumLeap", title: "Quantum Leap", description: "Unlock quantum computing", isUnlocked: false, order: 15),
+                        AchievementModel(id: "Quantum Era", title: "Welcome to the quantum era", description: "earn 1 qubit", isUnlocked: false, order: 16),
+                        AchievementModel(id: "Quantum 10qb", title: "Quantum Explorer", description: "earn 10 qubits", isUnlocked: false, order: 17),
+                        AchievementModel(id: "Quantum 100qb", title: "Quantum Adventurer", description: "earn 100 qubits", isUnlocked: false, order: 18),
+                        AchievementModel(id: "Quantum 1000qb", title: "Quantum Conquerer", description: "earn 1,000 qubits", isUnlocked: false, order: 19),
+                        AchievementModel(id: "Quantum 10kqb", title: "Quantum Scientist", description: "earn 10,000 qubits", isUnlocked: false, order: 20),
+                        AchievementModel(id: "Quantum 100kqb", title: "Quantum Executive", description: "earn 100,000 qubits", isUnlocked: false, order: 21),
+                        AchievementModel(id: "Quantum 1mqb", title: "Quantum Company", description: "earn 1,000,000 qubits", isUnlocked: false, order: 22),
+                        AchievementModel(id: "Quantum 10mqb", title: "Quantum Mega Company", description: "earn 10,000,000 qubits", isUnlocked: false, order: 23),
+                        AchievementModel(id: "Quantum 100mqb", title: "Quantum Monopoly", description: "earn 100,000,000 qubits", isUnlocked: false, order: 24),
+                        AchievementModel(id: "Quantum 1bqb", title: "Quantum Clicker", description: "earn 1,000,000,000 qubits", isUnlocked: false, order: 25),
+                        AchievementModel(id: "Quantum 1tqb", title: "Quantum Trillionaire", description: "earn 1,000,000,000,000 qubits", isUnlocked: false, order: 25),
+                        AchievementModel(id: "prestigeMaster", title: "Prestige Master", description: "Prestige 5 times", isUnlocked: false, order: 26),
                     ]
     }
     
@@ -163,7 +177,143 @@ class GameState: ObservableObject {
                 UpgradeModel(icon: "air.conditioner.vertical", name: "Advanced Cooling Solutions", cost: 2_000_000, costResourceType: "Bits", description: "Install an advanced cooling system to maintain optimal performance \nMainframes are 75% faster", upgradeType: .factoryEfficiency("Mainframe", 1.75)),
                 UpgradeModel(icon: "bus", name: "High-Speed Data Bus", cost: 2_500_000, costResourceType: "Bits", description: "Upgrade the data bus for rapid internal communication \nMainframes are 2x faster", upgradeType: .factoryEfficiency("Mainframe", 2)),
                 UpgradeModel(icon: "brain.filled.head.profile", name: "Artificial Intelligence Integration", cost: 3_000_000, costResourceType: "Bits", description: "Incorporate AI to optimize data processing \nMainframes are 3x faster", upgradeType: .factoryEfficiency("Mainframe", 3)),
+                // Vector Processor Upgrades
+                UpgradeModel(icon: "cpu", name: "Enhanced Vector Units", cost: 50000000, costResourceType: "Bits", description: "Upgrade vector processing units \nVector Processors are 1.5x faster", upgradeType: .factoryEfficiency("Vector Processor", 1.5)),
+                UpgradeModel(icon: "memorychip", name: "High-Bandwidth Memory", cost: 100000000, costResourceType: "Bits", description: "Implement HBM for faster data access \nVector Processors are 1.75x faster", upgradeType: .factoryEfficiency("Vector Processor", 1.75)),
+                UpgradeModel(icon: "rectangle.3.group", name: "Multi-Core Architecture", cost: 200000000, costResourceType: "Bits", description: "Implement multi-core design \nVector Processors are 2x faster", upgradeType: .factoryEfficiency("Vector Processor", 2.0)),
+                UpgradeModel(icon: "waveform.path.ecg", name: "Advanced Pipeline Optimization", cost: 400000000, costResourceType: "Bits", description: "Optimize instruction pipeline \nVector Processors are 2.25x faster", upgradeType: .factoryEfficiency("Vector Processor", 2.25)),
+                UpgradeModel(icon: "bolt.horizontal", name: "Quantum-Inspired Algorithms", cost: 800000000, costResourceType: "Bits", description: "Implement quantum-inspired classical algorithms \nVector Processors are 3x faster", upgradeType: .factoryEfficiency("Vector Processor", 3.0)),
+
+                // Parallel Processing Array Upgrades
+                UpgradeModel(icon: "network", name: "Enhanced Interconnect", cost: 500000000, costResourceType: "Bits", description: "Upgrade inter-processor communication \nParallel Processing Arrays are 1.5x faster", upgradeType: .factoryEfficiency("Parallel Processing Array", 1.5)),
+                UpgradeModel(icon: "rectangle.split.3x3", name: "Scalable Architecture", cost: 1000000000, costResourceType: "Bits", description: "Implement a more scalable design \nParallel Processing Arrays are 1.75x faster", upgradeType: .factoryEfficiency("Parallel Processing Array", 1.75)),
+                UpgradeModel(icon: "cpu", name: "Heterogeneous Computing", cost: 2000000000, costResourceType: "Bits", description: "Integrate CPUs and GPUs \nParallel Processing Arrays are 2x faster", upgradeType: .factoryEfficiency("Parallel Processing Array", 2.0)),
+                UpgradeModel(icon: "chart.bar", name: "Load Balancing Algorithms", cost: 4000000000, costResourceType: "Bits", description: "Implement advanced load balancing \nParallel Processing Arrays are 2.25x faster", upgradeType: .factoryEfficiency("Parallel Processing Array", 2.25)),
+                UpgradeModel(icon: "rays", name: "Optical Interconnects", cost: 8000000000, costResourceType: "Bits", description: "Use light for inter-processor communication \nParallel Processing Arrays are 3x faster", upgradeType: .factoryEfficiency("Parallel Processing Array", 3.0)),
+
+                // Neural Network Computer Upgrades
+                UpgradeModel(icon: "brain", name: "Advanced Neural Architecture", cost: 5000000000, costResourceType: "Bits", description: "Implement state-of-the-art neural network designs \nNeural Network Computers are 1.5x faster", upgradeType: .factoryEfficiency("Neural Network Computer", 1.5)),
+                UpgradeModel(icon: "waveform.path", name: "Spiking Neural Networks", cost: 10000000000, costResourceType: "Bits", description: "Integrate spiking neural network models \nNeural Network Computers are 1.75x faster", upgradeType: .factoryEfficiency("Neural Network Computer", 1.75)),
+                UpgradeModel(icon: "cpu", name: "Neuromorphic Hardware", cost: 20000000000, costResourceType: "Bits", description: "Use brain-inspired computing hardware \nNeural Network Computers are 2x faster", upgradeType: .factoryEfficiency("Neural Network Computer", 2.0)),
+                UpgradeModel(icon: "chart.xyaxis.line", name: "Adaptive Learning Algorithms", cost: 40000000000, costResourceType: "Bits", description: "Implement advanced adaptive learning techniques \nNeural Network Computers are 2.25x faster", upgradeType: .factoryEfficiency("Neural Network Computer", 2.25)),
+                UpgradeModel(icon: "ladybug", name: "Quantum-Enhanced Machine Learning", cost: 80000000000, costResourceType: "Bits", description: "Integrate quantum algorithms for machine learning \nNeural Network Computers are 3x faster", upgradeType: .factoryEfficiency("Neural Network Computer", 3.0)),
+
+                // Supercomputer Upgrades
+                UpgradeModel(icon: "cpu", name: "Exascale Computing", cost: 50000000000, costResourceType: "Bits", description: "Achieve exascale performance \nSupercomputers are 1.5x faster", upgradeType: .factoryEfficiency("Supercomputer", 1.5)),
+                UpgradeModel(icon: "thermometer.sun", name: "Advanced Cooling Systems", cost: 100000000000, costResourceType: "Bits", description: "Implement cutting-edge cooling technology \nSupercomputers are 1.75x faster", upgradeType: .factoryEfficiency("Supercomputer", 1.75)),
+                UpgradeModel(icon: "rectangle.connected.to.line.below", name: "3D Chip Stacking", cost: 200000000000, costResourceType: "Bits", description: "Use 3D chip stacking for higher density \nSupercomputers are 2x faster", upgradeType: .factoryEfficiency("Supercomputer", 2.0)),
+                UpgradeModel(icon: "network", name: "Photonic Computing", cost: 400000000000, costResourceType: "Bits", description: "Integrate photonic components for faster data transfer \nSupercomputers are 2.25x faster", upgradeType: .factoryEfficiency("Supercomputer", 2.25)),
+                UpgradeModel(icon: "atom", name: "Quantum-Classical Hybrid", cost: 800000000000, costResourceType: "Bits", description: "Integrate quantum processors with classical supercomputers \nSupercomputers are 3x faster", upgradeType: .factoryEfficiency("Supercomputer", 3.0)),
+
+                // Basic Quantum Computer Upgrades
+                UpgradeModel(icon: "atom", name: "Improved Qubit Coherence", cost: 1000, costResourceType: "Qubits", description: "Extend qubit coherence time \nBasic Quantum Computers are 1.5x faster", upgradeType: .factoryEfficiency("Basic Quantum Computer", 1.5)),
+                UpgradeModel(icon: "waveform", name: "Enhanced Quantum Gates", cost: 2000, costResourceType: "Qubits", description: "Implement more precise quantum gates \nBasic Quantum Computers are 1.75x faster", upgradeType: .factoryEfficiency("Basic Quantum Computer", 1.75)),
+                UpgradeModel(icon: "chart.bar", name: "Quantum Error Correction", cost: 4000, costResourceType: "Qubits", description: "Implement basic quantum error correction \nBasic Quantum Computers are 2x faster", upgradeType: .factoryEfficiency("Basic Quantum Computer", 2.0)),
+                UpgradeModel(icon: "function", name: "Quantum Algorithm Optimization", cost: 8000, costResourceType: "Qubits", description: "Optimize quantum algorithms for better performance \nBasic Quantum Computers are 2.25x faster", upgradeType: .factoryEfficiency("Basic Quantum Computer", 2.25)),
+                UpgradeModel(icon: "cpu", name: "Scalable Qubit Architecture", cost: 16000, costResourceType: "Qubits", description: "Implement a more scalable qubit design \nBasic Quantum Computers are 3x faster", upgradeType: .factoryEfficiency("Basic Quantum Computer", 3.0)),
+
+                // Quantum Annealer Upgrades
+                UpgradeModel(icon: "thermometer.snowflake", name: "Enhanced Cooling System", cost: 10000, costResourceType: "Qubits", description: "Implement advanced cooling for better stability \nQuantum Annealers are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Annealer", 1.5)),
+                UpgradeModel(icon: "chart.xyaxis.line", name: "Improved Annealing Schedule", cost: 20000, costResourceType: "Qubits", description: "Optimize the annealing process \nQuantum Annealers are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Annealer", 1.75)),
+                UpgradeModel(icon: "square.grid.3x3.fill", name: "Increased Qubit Connectivity", cost: 40000, costResourceType: "Qubits", description: "Enhance qubit interconnections \nQuantum Annealers are 2x faster", upgradeType: .factoryEfficiency("Quantum Annealer", 2.0)),
+                UpgradeModel(icon: "waveform.path.ecg", name: "Quantum Fluctuation Enhancement", cost: 80000, costResourceType: "Qubits", description: "Harness quantum fluctuations for better solutions \nQuantum Annealers are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Annealer", 2.25)),
+                UpgradeModel(icon: "cpu", name: "Hybrid Quantum-Classical Algorithms", cost: 160000, costResourceType: "Qubits", description: "Implement hybrid algorithms for complex problems \nQuantum Annealers are 3x faster", upgradeType: .factoryEfficiency("Quantum Annealer", 3.0)),
+
+                // Trapped Ion Quantum Computer Upgrades
+                UpgradeModel(icon: "bolt", name: "Enhanced Ion Traps", cost: 100000, costResourceType: "Qubits", description: "Improve ion trapping mechanisms \nTrapped Ion Quantum Computers are 1.5x faster", upgradeType: .factoryEfficiency("Trapped Ion Quantum Computer", 1.5)),
+                UpgradeModel(icon: "laser.burst", name: "Precision Laser Control", cost: 200000, costResourceType: "Qubits", description: "Implement high-precision lasers for better qubit control \nTrapped Ion Quantum Computers are 1.75x faster", upgradeType: .factoryEfficiency("Trapped Ion Quantum Computer", 1.75)),
+                UpgradeModel(icon: "shield", name: "Improved Decoherence Protection", cost: 400000, costResourceType: "Qubits", description: "Enhance protection against decoherence \nTrapped Ion Quantum Computers are 2x faster", upgradeType: .factoryEfficiency("Trapped Ion Quantum Computer", 2.0)),
+                UpgradeModel(icon: "arrow.triangle.2.circlepath", name: "Multi-Species Ion Systems", cost: 800000, costResourceType: "Qubits", description: "Use multiple ion species for enhanced functionality \nTrapped Ion Quantum Computers are 2.25x faster", upgradeType: .factoryEfficiency("Trapped Ion Quantum Computer", 2.25)),
+                UpgradeModel(icon: "network", name: "Modular Ion Trap Architecture", cost: 1600000, costResourceType: "Qubits", description: "Implement a scalable, modular ion trap design \nTrapped Ion Quantum Computers are 3x faster", upgradeType: .factoryEfficiency("Trapped Ion Quantum Computer", 3.0)),
                 
+                // Superconducting Quantum Processor Upgrades
+                UpgradeModel(icon: "bolt.shield", name: "Enhanced Flux Control", cost: 1000000, costResourceType: "Qubits", description: "Improve magnetic flux control \nSuperconducting Quantum Processors are 1.5x faster", upgradeType: .factoryEfficiency("Superconducting Quantum Processor", 1.5)),
+                UpgradeModel(icon: "antenna.radiowaves.left.and.right", name: "Microwave Pulse Optimization", cost: 2000000, costResourceType: "Qubits", description: "Enhance qubit control with precise microwave pulses \nSuperconducting Quantum Processors are 1.75x faster", upgradeType: .factoryEfficiency("Superconducting Quantum Processor", 1.75)),
+                UpgradeModel(icon: "clock.arrow.2.circlepath", name: "Coherence Time Extension", cost: 4000000, costResourceType: "Qubits", description: "Extend qubit coherence time \nSuperconducting Quantum Processors are 2x faster", upgradeType: .factoryEfficiency("Superconducting Quantum Processor", 2.0)),
+                UpgradeModel(icon: "chart.xyaxis.line", name: "Multi-Level Qubit States", cost: 8000000, costResourceType: "Qubits", description: "Utilize higher energy levels for enhanced processing \nSuperconducting Quantum Processors are 2.25x faster", upgradeType: .factoryEfficiency("Superconducting Quantum Processor", 2.25)),
+                UpgradeModel(icon: "rectangle.3.group", name: "3D Circuit Architecture", cost: 16000000, costResourceType: "Qubits", description: "Implement 3D superconducting circuits for improved scalability \nSuperconducting Quantum Processors are 3x faster", upgradeType: .factoryEfficiency("Superconducting Quantum Processor", 3.0)),
+
+                // Topological Quantum System Upgrades
+                UpgradeModel(icon: "figure.walk.circle", name: "Enhanced Braiding Operations", cost: 10000000, costResourceType: "Qubits", description: "Improve anyonic braiding techniques \nTopological Quantum Systems are 1.5x faster", upgradeType: .factoryEfficiency("Topological Quantum System", 1.5)),
+                UpgradeModel(icon: "shield.lefthalf.filled", name: "Topological Error Suppression", cost: 20000000, costResourceType: "Qubits", description: "Enhance inherent error protection \nTopological Quantum Systems are 1.75x faster", upgradeType: .factoryEfficiency("Topological Quantum System", 1.75)),
+                UpgradeModel(icon: "mosaic", name: "Exotic Anyonic States", cost: 40000000, costResourceType: "Qubits", description: "Utilize more complex anyonic states \nTopological Quantum Systems are 2x faster", upgradeType: .factoryEfficiency("Topological Quantum System", 2.0)),
+                UpgradeModel(icon: "square.3.layers.3d.down.right", name: "Multi-Layer Topological Circuits", cost: 80000000, costResourceType: "Qubits", description: "Implement multi-layered topological quantum circuits \nTopological Quantum Systems are 2.25x faster", upgradeType: .factoryEfficiency("Topological Quantum System", 2.25)),
+                UpgradeModel(icon: "lock.rotation", name: "Topological Phase Transitions", cost: 160000000, costResourceType: "Qubits", description: "Harness topological phase transitions for computation \nTopological Quantum Systems are 3x faster", upgradeType: .factoryEfficiency("Topological Quantum System", 3.0)),
+
+                // Quantum Error Correction Engine Upgrades
+                UpgradeModel(icon: "checkmark.shield", name: "Surface Code Optimization", cost: 100000000, costResourceType: "Qubits", description: "Enhance surface code error correction \nQuantum Error Correction Engines are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Error Correction Engine", 1.5)),
+                UpgradeModel(icon: "arrow.triangle.2.circlepath", name: "Real-Time Error Tracking", cost: 200000000, costResourceType: "Qubits", description: "Implement continuous error monitoring \nQuantum Error Correction Engines are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Error Correction Engine", 1.75)),
+                UpgradeModel(icon: "rectangle.and.hand.point.up.left", name: "Adaptive Error Correction", cost: 400000000, costResourceType: "Qubits", description: "Develop dynamic error correction strategies \nQuantum Error Correction Engines are 2x faster", upgradeType: .factoryEfficiency("Quantum Error Correction Engine", 2.0)),
+                UpgradeModel(icon: "square.stack.3d.up", name: "Multi-Level Error Encoding", cost: 800000000, costResourceType: "Qubits", description: "Utilize hierarchical error correction codes \nQuantum Error Correction Engines are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Error Correction Engine", 2.25)),
+                UpgradeModel(icon: "cpu", name: "Hardware-Efficient Error Correction", cost: 1600000000, costResourceType: "Qubits", description: "Implement error correction at the hardware level \nQuantum Error Correction Engines are 3x faster", upgradeType: .factoryEfficiency("Quantum Error Correction Engine", 3.0)),
+                // Quantum Network Node Upgrades
+                UpgradeModel(icon: "network", name: "Quantum Repeater Enhancement", cost: 1000000000, costResourceType: "Qubits", description: "Improve quantum state transmission over long distances \nQuantum Network Nodes are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Network Node", 1.5)),
+                UpgradeModel(icon: "lock.icloud", name: "Quantum Cryptography Protocols", cost: 2000000000, costResourceType: "Qubits", description: "Implement advanced quantum key distribution \nQuantum Network Nodes are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Network Node", 1.75)),
+                UpgradeModel(icon: "arrow.triangle.branch", name: "Multi-Node Entanglement", cost: 4000000000, costResourceType: "Qubits", description: "Enable simultaneous entanglement across multiple nodes \nQuantum Network Nodes are 2x faster", upgradeType: .factoryEfficiency("Quantum Network Node", 2.0)),
+                UpgradeModel(icon: "rectangle.connected.to.line.below", name: "Quantum-Classical Interface", cost: 8000000000, costResourceType: "Qubits", description: "Optimize quantum-classical data conversion \nQuantum Network Nodes are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Network Node", 2.25)),
+                UpgradeModel(icon: "globe.americas", name: "Global Quantum Network", cost: 16000000000, costResourceType: "Qubits", description: "Expand node connectivity to a global scale \nQuantum Network Nodes are 3x faster", upgradeType: .factoryEfficiency("Quantum Network Node", 3.0)),
+
+                // Quantum Simulator Array Upgrades
+                UpgradeModel(icon: "square.grid.3x3", name: "Expanded Qubit Array", cost: 10000000000, costResourceType: "Qubits", description: "Increase the number of simulated qubits \nQuantum Simulator Arrays are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Simulator Array", 1.5)),
+                UpgradeModel(icon: "circle.hexagongrid", name: "Advanced Lattice Configurations", cost: 20000000000, costResourceType: "Qubits", description: "Implement complex qubit lattice structures \nQuantum Simulator Arrays are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Simulator Array", 1.75)),
+                UpgradeModel(icon: "waveform.path", name: "Quantum Dynamics Accelerator", cost: 40000000000, costResourceType: "Qubits", description: "Enhance simulation of quantum system dynamics \nQuantum Simulator Arrays are 2x faster", upgradeType: .factoryEfficiency("Quantum Simulator Array", 2.0)),
+                UpgradeModel(icon: "cpu.fill", name: "Tensor Network Coprocessor", cost: 80000000000, costResourceType: "Qubits", description: "Add specialized hardware for tensor network calculations \nQuantum Simulator Arrays are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Simulator Array", 2.25)),
+                UpgradeModel(icon: "cube.transparent", name: "Holographic Quantum Simulation", cost: 160000000000, costResourceType: "Qubits", description: "Implement cutting-edge holographic quantum simulation techniques \nQuantum Simulator Arrays are 3x faster", upgradeType: .factoryEfficiency("Quantum Simulator Array", 3.0)),
+
+                // Universal Fault-Tolerant Quantum Computer Upgrades
+                UpgradeModel(icon: "shield.checkerboard", name: "Advanced Error Correction", cost: 100000000000, costResourceType: "Qubits", description: "Implement state-of-the-art quantum error correction codes \nUniversal Fault-Tolerant Quantum Computers are 1.5x faster", upgradeType: .factoryEfficiency("Universal Fault-Tolerant Quantum Computer", 1.5)),
+                UpgradeModel(icon: "circle.grid.cross", name: "Topological Qubit Enhancement", cost: 200000000000, costResourceType: "Qubits", description: "Utilize topological qubits for improved stability \nUniversal Fault-Tolerant Quantum Computers are 1.75x faster", upgradeType: .factoryEfficiency("Universal Fault-Tolerant Quantum Computer", 1.75)),
+                UpgradeModel(icon: "rotate.3d", name: "Multi-Dimensional Quantum Gates", cost: 400000000000, costResourceType: "Qubits", description: "Implement advanced multi-qubit gate operations \nUniversal Fault-Tolerant Quantum Computers are 2x faster", upgradeType: .factoryEfficiency("Universal Fault-Tolerant Quantum Computer", 2.0)),
+                UpgradeModel(icon: "square.stack.3d.forward.dottedline", name: "Quantum Circuit Optimization", cost: 800000000000, costResourceType: "Qubits", description: "Enhance quantum circuit compilation and optimization \nUniversal Fault-Tolerant Quantum Computers are 2.25x faster", upgradeType: .factoryEfficiency("Universal Fault-Tolerant Quantum Computer", 2.25)),
+                UpgradeModel(icon: "infinity", name: "Unlimited Coherence Time", cost: 1600000000000, costResourceType: "Qubits", description: "Achieve theoretically unlimited qubit coherence time \nUniversal Fault-Tolerant Quantum Computers are 3x faster", upgradeType: .factoryEfficiency("Universal Fault-Tolerant Quantum Computer", 3.0)),
+
+                // Quantum Multiverse Engine Upgrades
+                UpgradeModel(icon: "sparkles", name: "Multiverse Tap", cost: 1000000000000, costResourceType: "Qubits", description: "Establish initial connection to quantum multiverse \nQuantum Multiverse Engines are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Multiverse Engine", 1.5)),
+                UpgradeModel(icon: "arrow.left.and.right.righttriangle.left.righttriangle.right", name: "Inter-Universe Coherence", cost: 2000000000000, costResourceType: "Qubits", description: "Synchronize quantum states across multiple universes \nQuantum Multiverse Engines are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Multiverse Engine", 1.75)),
+                UpgradeModel(icon: "seal", name: "Multiverse Seal Capacitor", cost: 4000000000000, costResourceType: "Qubits", description: "Store and utilize energy from multiple universes \nQuantum Multiverse Engines are 2x faster", upgradeType: .factoryEfficiency("Quantum Multiverse Engine", 2.0)),
+                UpgradeModel(icon: "tornado", name: "Quantum Tornado Harmonizer", cost: 8000000000000, costResourceType: "Qubits", description: "Harness chaotic multiverse energies for computation \nQuantum Multiverse Engines are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Multiverse Engine", 2.25)),
+                UpgradeModel(icon: "hurricane", name: "Multiverse Hurricane Unleashed", cost: 16000000000000, costResourceType: "Qubits", description: "Fully unlock the computational potential of the quantum multiverse \nQuantum Multiverse Engines are 3x faster", upgradeType: .factoryEfficiency("Quantum Multiverse Engine", 3.0)),
+
+                // Distributed Quantum Cloud Upgrades
+                UpgradeModel(icon: "cloud", name: "Quantum Cloud Expansion", cost: 10000000000000, costResourceType: "Qubits", description: "Increase the number of interconnected quantum nodes \nDistributed Quantum Clouds are 1.5x faster", upgradeType: .factoryEfficiency("Distributed Quantum Cloud", 1.5)),
+                UpgradeModel(icon: "antenna.radiowaves.left.and.right", name: "Quantum Teleportation Network", cost: 20000000000000, costResourceType: "Qubits", description: "Implement global quantum state teleportation \nDistributed Quantum Clouds are 1.75x faster", upgradeType: .factoryEfficiency("Distributed Quantum Cloud", 1.75)),
+                UpgradeModel(icon: "rectangle.connected.to.line.below", name: "Advanced Hybrid Quantum-Classical Algorithms", cost: 40000000000000, costResourceType: "Qubits", description: "Optimize workload distribution between quantum and classical systems \nDistributed Quantum Clouds are 2x faster", upgradeType: .factoryEfficiency("Distributed Quantum Cloud", 2.0)),
+                UpgradeModel(icon: "chart.xyaxis.line", name: "Dynamic Resource Allocation", cost: 80000000000000, costResourceType: "Qubits", description: "Implement AI-driven quantum resource management \nDistributed Quantum Clouds are 2.25x faster", upgradeType: .factoryEfficiency("Distributed Quantum Cloud", 2.25)),
+                UpgradeModel(icon: "network", name: "Quantum Internet Protocol", cost: 160000000000000, costResourceType: "Qubits", description: "Establish a standardized quantum internet protocol \nDistributed Quantum Clouds are 3x faster", upgradeType: .factoryEfficiency("Distributed Quantum Cloud", 3.0)),
+
+                // Quantum AI Nexus Upgrades
+                UpgradeModel(icon: "brain", name: "Quantum Neural Networks", cost: 100000000000000, costResourceType: "Qubits", description: "Implement quantum-enhanced neural network architectures \nQuantum AI Nexuses are 1.5x faster", upgradeType: .factoryEfficiency("Quantum AI Nexus", 1.5)),
+                UpgradeModel(icon: "cube.transparent", name: "Quantum Tensor Processing", cost: 200000000000000, costResourceType: "Qubits", description: "Enhance AI operations with quantum tensor networks \nQuantum AI Nexuses are 1.75x faster", upgradeType: .factoryEfficiency("Quantum AI Nexus", 1.75)),
+                UpgradeModel(icon: "arrow.triangle.2.circlepath", name: "Quantum Reinforcement Learning", cost: 400000000000000, costResourceType: "Qubits", description: "Develop quantum-enhanced reinforcement learning algorithms \nQuantum AI Nexuses are 2x faster", upgradeType: .factoryEfficiency("Quantum AI Nexus", 2.0)),
+                UpgradeModel(icon: "network", name: "Quantum Semantic Networks", cost: 800000000000000, costResourceType: "Qubits", description: "Implement quantum-based natural language processing \nQuantum AI Nexuses are 2.25x faster", upgradeType: .factoryEfficiency("Quantum AI Nexus", 2.25)),
+                UpgradeModel(icon: "cpu", name: "Quantum Cognitive Architecture", cost: 1600000000000000, costResourceType: "Qubits", description: "Develop a quantum-based artificial general intelligence framework \nQuantum AI Nexuses are 3x faster", upgradeType: .factoryEfficiency("Quantum AI Nexus", 3.0)),
+
+                // Quantum-Classical Hybrid Megastructure Upgrades
+                UpgradeModel(icon: "building.2", name: "Expanded Hybrid Processing Units", cost: 1000000000000000, costResourceType: "Qubits", description: "Increase the number of integrated quantum-classical processors \nQuantum-Classical Hybrid Megastructures are 1.5x faster", upgradeType: .factoryEfficiency("Quantum-Classical Hybrid Megastructure", 1.5)),
+                UpgradeModel(icon: "bolt.horizontal.circle", name: "Quantum-Classical Interface Optimization", cost: 2000000000000000, costResourceType: "Qubits", description: "Enhance data transfer between quantum and classical systems \nQuantum-Classical Hybrid Megastructures are 1.75x faster", upgradeType: .factoryEfficiency("Quantum-Classical Hybrid Megastructure", 1.75)),
+                UpgradeModel(icon: "rectangle.3.group", name: "Modular Quantum Expansion", cost: 4000000000000000, costResourceType: "Qubits", description: "Implement plug-and-play quantum module integration \nQuantum-Classical Hybrid Megastructures are 2x faster", upgradeType: .factoryEfficiency("Quantum-Classical Hybrid Megastructure", 2.0)),
+                UpgradeModel(icon: "cpu", name: "Neuromorphic Quantum Processors", cost: 8000000000000000, costResourceType: "Qubits", description: "Integrate brain-inspired architectures with quantum systems \nQuantum-Classical Hybrid Megastructures are 2.25x faster", upgradeType: .factoryEfficiency("Quantum-Classical Hybrid Megastructure", 2.25)),
+                UpgradeModel(icon: "square.stack.3d.up.fill", name: "Exascale Quantum-Classical Integration", cost: 16000000000000000, costResourceType: "Qubits", description: "Achieve seamless exascale computing with quantum acceleration \nQuantum-Classical Hybrid Megastructures are 3x faster", upgradeType: .factoryEfficiency("Quantum-Classical Hybrid Megastructure", 3.0)),
+                // Quantum Dimension Gateway Upgrades
+                UpgradeModel(icon: "circle.hexagongrid.fill", name: "Dimensional Resonance Tuning", cost: 10000000000000000, costResourceType: "Qubits", description: "Fine-tune gateway resonance with quantum dimensions \nQuantum Dimension Gateways are 1.5x faster", upgradeType: .factoryEfficiency("Quantum Dimension Gateway", 1.5)),
+                UpgradeModel(icon: "bubbles.and.sparkles.fill", name: "Multiversal Qubit Entanglement", cost: 20000000000000000, costResourceType: "Qubits", description: "Establish qubit correlations across dimensional boundaries \nQuantum Dimension Gateways are 1.75x faster", upgradeType: .factoryEfficiency("Quantum Dimension Gateway", 1.75)),
+                UpgradeModel(icon: "rotate.3d", name: "Hyperdimensional Quantum Circuits", cost: 40000000000000000, costResourceType: "Qubits", description: "Implement quantum circuits that operate beyond 3D space \nQuantum Dimension Gateways are 2x faster", upgradeType: .factoryEfficiency("Quantum Dimension Gateway", 2.0)),
+                UpgradeModel(icon: "square.stack.3d.forward.dottedline.fill", name: "Quantum Dimension Stabilizers", cost: 80000000000000000, costResourceType: "Qubits", description: "Enhance stability of interdimensional quantum connections \nQuantum Dimension Gateways are 2.25x faster", upgradeType: .factoryEfficiency("Quantum Dimension Gateway", 2.25)),
+                UpgradeModel(icon: "peacesign", name: "Dimension Harmony Resonator", cost: 160000000000000000, costResourceType: "Qubits", description: "Achieve perfect harmony between all accessible quantum dimensions \nQuantum Dimension Gateways are 3x faster", upgradeType: .factoryEfficiency("Quantum Dimension Gateway", 3.0)),
+
+                // Cosmic Quantum Computer Upgrades
+                UpgradeModel(icon: "star.fill", name: "Stellar Qubit Array", cost: 100000000000000000, costResourceType: "Qubits", description: "Harness stellar phenomena for qubit manipulation \nCosmic Quantum Computers are 1.5x faster", upgradeType: .factoryEfficiency("Cosmic Quantum Computer", 1.5)),
+                UpgradeModel(icon: "atom", name: "Galactic Entanglement Network", cost: 200000000000000000, costResourceType: "Qubits", description: "Establish quantum entanglement on a galactic scale \nCosmic Quantum Computers are 1.75x faster", upgradeType: .factoryEfficiency("Cosmic Quantum Computer", 1.75)),
+                UpgradeModel(icon: "bolt.horizontal.circle.fill", name: "Supernova Quantum Accelerator", cost: 400000000000000000, costResourceType: "Qubits", description: "Utilize energy from supernovas to power quantum operations \nCosmic Quantum Computers are 2x faster", upgradeType: .factoryEfficiency("Cosmic Quantum Computer", 2.0)),
+                UpgradeModel(icon: "hurricane", name: "Black Hole Information Processor", cost: 800000000000000000, costResourceType: "Qubits", description: "Leverage black hole physics for advanced quantum computations \nCosmic Quantum Computers are 2.25x faster", upgradeType: .factoryEfficiency("Cosmic Quantum Computer", 2.25)),
+                UpgradeModel(icon: "sparkles", name: "Universal Quantum Fabric Manipulator", cost: 1600000000000000000, costResourceType: "Qubits", description: "Manipulate the quantum fabric of the universe for ultimate computational power \nCosmic Quantum Computers are 3x faster", upgradeType: .factoryEfficiency("Cosmic Quantum Computer", 3.0)),
+
+                // Planck-Scale Quantum Processor Upgrades
+                UpgradeModel(icon: "atom", name: "Planck Length Qubit Miniaturization", cost: 1000000000000000000, costResourceType: "Qubits", description: "Shrink qubits to the smallest possible scale \nPlanck-Scale Quantum Processors are 1.5x faster", upgradeType: .factoryEfficiency("Planck-Scale Quantum Processor", 1.5)),
+                UpgradeModel(icon: "waveform.path.ecg.rectangle", name: "Quantum Foam Stabilizer", cost: 2000000000000000000, costResourceType: "Qubits", description: "Harness and stabilize quantum foam for computation \nPlanck-Scale Quantum Processors are 1.75x faster", upgradeType: .factoryEfficiency("Planck-Scale Quantum Processor", 1.75)),
+                UpgradeModel(icon: "arrow.3.trianglepath", name: "Quantum Gravity Integrator", cost: 4000000000000000000, costResourceType: "Qubits", description: "Incorporate quantum gravity effects into computations \nPlanck-Scale Quantum Processors are 2x faster", upgradeType: .factoryEfficiency("Planck-Scale Quantum Processor", 2.0)),
+                UpgradeModel(icon: "bubbles.and.sparkles.fill", name: "Spacetime Curvature Processor", cost: 8000000000000000000, costResourceType: "Qubits", description: "Utilize spacetime curvature for enhanced quantum operations \nPlanck-Scale Quantum Processors are 2.25x faster", upgradeType: .factoryEfficiency("Planck-Scale Quantum Processor", 2.25)),
+                UpgradeModel(icon: "infinity", name: "Unified Field Theory Computer", cost: 16000000000000000000, costResourceType: "Qubits", description: "Achieve computational supremacy through unified field theory \nPlanck-Scale Quantum Processors are 3x faster", upgradeType: .factoryEfficiency("Planck-Scale Quantum Processor", 3.0)),
 
 
 
@@ -297,6 +447,63 @@ class GameState: ObservableObject {
                     if model.factories.reduce(0, { $0 + $1.count }) >= 50 {
                         achievement.isUnlocked = true
                     }
+                case "bitMultiMillionaire":
+                    if model.totalBitsEarned >= 2_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "bit500m":
+                    if model.totalBitsEarned >= 500_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "bit1b":
+                    if model.totalBitsEarned >= 1_000_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "bit1t":
+                    if model.totalBitsEarned >= 1_000_000_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 10qb":
+                    if model.totalQubitsEarned >= 10{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 100qb":
+                    if model.totalQubitsEarned >= 100{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 1000qb":
+                    if model.totalQubitsEarned >= 1000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 10kqb":
+                    if model.totalQubitsEarned >= 10_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 100kqb":
+                    if model.totalQubitsEarned >= 100_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 1mqb":
+                    if model.totalQubitsEarned >= 1_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 10mqb":
+                    if model.totalQubitsEarned >= 10_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 100mqb":
+                    if model.totalQubitsEarned >= 100_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 1bqb":
+                    if model.totalQubitsEarned >= 1_000_000_000{
+                        achievement.isUnlocked = true
+                    }
+                case "Quantum 1tqb":
+                    if model.totalQubitsEarned >= 1_000_000_000_000{
+                        achievement.isUnlocked = true
+                    }
+
 
                 default:
                     break
@@ -489,57 +696,22 @@ class GameState: ObservableObject {
     
     func formatNumber(_ number: Double) -> String {
         let absNumber = abs(number)
-        let sign = number < 0 ? "-" : ""
+        let sign = number.sign == .minus ? "-" : ""
         
-        switch absNumber {
-        case 0..<1000:
-            if number.truncatingRemainder(dividingBy: 1) == 0 {
-                return String(format: "%@%.0f",sign, absNumber)
-            }else{
-                return String(format: "%@%.2f", sign, absNumber)
-            }
-        case 1000..<1_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0 {
-                return String(format: "%@%.0fK",sign, absNumber / 1000)
-            }else{
-                return String(format: "%@%.1fK", sign, absNumber / 1000)
-            }
-        case 1_000_000..<1_000_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0 {
-                return String(format: "%@%.0fM",sign, absNumber / 1_000_000)
-            }else{
-                return String(format: "%@%.1fM", sign, absNumber / 1_000_000)
-            }
-        case 1_000_000_000..<1_000_000_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0 {
-                return String(format: "%@%.0fB",sign, absNumber / 1_000_000_000)
-            }else{
-                return String(format: "%@%.1fB", sign, absNumber / 1_000_000_000)
-            }
-        case 1_000_000_000_000..<1_000_000_000_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0{
-                return String(format: "%@%.0fQu",sign, absNumber / 1_000_000_000_000_000)
-            }else{
-                return String(format: "%@%.1fQu",sign, absNumber / 1_000_000_000_000_000)
-            }
-        case 1_000_000_000_000_000..<1_000_000_000_000_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0{
-                return String(format: "%@%.0fQi",sign, absNumber / 1_000_000_000_000_000_000)
-            }else{
-                return String(format: "%@%.1fQi",sign, absNumber / 1_000_000_000_000_000_000)
-            }
-        case 1_000_000_000_000_000_000..<1_000_000_000_000_000_000_000:
-            if number.truncatingRemainder(dividingBy: 1) == 0{
-                return String(format: "%@%.0fS",sign, absNumber / 1_000_000_000_000_000_000_000)
-            }else{
-                return String(format: "%@%.1fS",sign, absNumber / 1_000_000_000_000_000_000_000)
-            }
-        default:
-            if number.truncatingRemainder(dividingBy: 1) == 0 {
-                return String(format: "%@%.0fT",sign, absNumber / 1_000_000_000_000)
-            }else{
-                return String(format: "%@%.1fT", sign, absNumber / 1_000_000_000_000)
-            }
+        let suffixes = ["", "K", "M", "B", "T", "Qu", "Qi", "S", "O", "N", "D"]
+        var suffixIndex = 0
+        var scaledNumber = absNumber
+
+        while scaledNumber >= 1000 && suffixIndex < suffixes.count - 1 {
+            scaledNumber /= 1000
+            suffixIndex += 1
+        }
+
+        if scaledNumber.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%@%.0f%@", sign, scaledNumber, suffixes[suffixIndex])
+        } else {
+            let decimalPlaces = scaledNumber < 10 ? 2 : 1
+            return String(format: "%@%.\(decimalPlaces)f%@", sign, scaledNumber, suffixes[suffixIndex])
         }
     }
     
@@ -549,9 +721,10 @@ class GameState: ObservableObject {
         if let bitsIndex = model.resources.firstIndex(where: { $0.name == upgrade.costResourceType }),
            model.resources[bitsIndex].amount >= upgrade.cost {
             model.resources[bitsIndex].amount -= upgrade.cost
-            applyUpgradeEffect(upgrade)
             model.upgrades.remove(at: upgradeIndex)
+            applyUpgradeEffect(upgrade)
         }
+        saveGameState()
     }
     
     func applyUpgradeEffect(_ upgrade: UpgradeModel) {
@@ -595,6 +768,9 @@ class GameState: ObservableObject {
         switch resourceName {
         case "Qubits":
             model.quantumUnlocked = true
+            if let QubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
+                model.resources[QubitsIndex].perClick = 0.1
+            }
         // Add other resources as needed
         default:
             break

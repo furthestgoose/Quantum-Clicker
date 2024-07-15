@@ -3,8 +3,9 @@
 quantum clicker is an idle game I'm currently developing.
 
 ## To Do
-- add upgrades for each classical factory (only 2 have an upgrade set currently)
-- add upgrades for each quantum factory
+- add more prestige upgrades
+- add more non factory related upgrades
+- final balance pass
 - test for bugs
 - make release website
 

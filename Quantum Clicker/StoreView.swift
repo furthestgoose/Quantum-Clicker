@@ -213,7 +213,7 @@ struct UpgradesList: View {
                 case "High-Speed Network Interface":
                     return gameState.factoryCount(name: "Workstation") >= 100
                 case "Improved Bandwidth":
-                    return gameState.model.totalBitsEarned >= 25000
+                    return gameState.model.totalBitsEarned >= 25000 && gameState.factoryCount(name: "Mini Server") >= 1
                 case "Energy Efficiency":
                     return gameState.factoryCount(name: "Mini Server") >= 5
                 case "Advanced Cooling System":
@@ -222,26 +222,26 @@ struct UpgradesList: View {
                     return gameState.factoryCount(name: "Mini Server") >= 15 && gameState.model.totalBitsEarned >= 100_000
                 case "Security Enhancements":
                     return gameState.factoryCount(name: "Mini Server") >= 20 && gameState.model.totalBitsEarned >= 150_000
-                case "High-Performance CPUs":
-                    return gameState.model.totalBitsEarned >= 100_000 && gameState.factoryCount(name: "Sever Rack") >= 5
+                case "High Performance CPUs":
+                    return gameState.model.totalBitsEarned >= 100_000 && gameState.factoryCount(name: "Server Rack") >= 1
                 case "Solid-State Drives":
-                    return gameState.model.totalBitsEarned >= 150_000 && gameState.factoryCount(name: "Sever Rack") >= 10
+                    return gameState.model.totalBitsEarned >= 150_000 && gameState.factoryCount(name: "Server Rack") >= 10
                 case "Enhanced Network Interface Cards":
-                    return gameState.model.totalBitsEarned >= 200_000 && gameState.factoryCount(name: "Sever Rack") >= 15
+                    return gameState.model.totalBitsEarned >= 200_000 && gameState.factoryCount(name: "Server Rack") >= 15
                 case "Power Distribution Unit Upgrade":
-                    return gameState.model.totalBitsEarned >= 250_000 && gameState.factoryCount(name: "Sever Rack") >= 20
+                    return gameState.model.totalBitsEarned >= 250_000 && gameState.factoryCount(name: "Server Rack") >= 20
                 case "Redundant Array of Independent Disks":
-                    return gameState.model.totalBitsEarned >= 300_000 && gameState.factoryCount(name: "Sever Rack") >= 25
+                    return gameState.model.totalBitsEarned >= 300_000 && gameState.factoryCount(name: "Server Rack") >= 25
                 case "High-Performance Servers":
-                    return gameState.model.totalBitsEarned >= 1_000_000 && gameState.factoryCount(name: "Sever Farm") >= 5
+                    return gameState.model.totalBitsEarned >= 1_000_000 && gameState.factoryCount(name: "Server Farm") >= 5
                 case "Data Center Optimization":
-                    return gameState.model.totalBitsEarned >= 1_500_000 && gameState.factoryCount(name: "Sever Farm") >= 10
+                    return gameState.model.totalBitsEarned >= 1_500_000 && gameState.factoryCount(name: "Server Farm") >= 10
                 case "Enhanced Power Supply":
-                    return gameState.model.totalBitsEarned >= 2_000_000 && gameState.factoryCount(name: "Sever Farm") >= 15
+                    return gameState.model.totalBitsEarned >= 2_000_000 && gameState.factoryCount(name: "Server Farm") >= 15
                 case "AI-Driven Maintenance":
-                    return gameState.model.totalBitsEarned >= 2_500_000 && gameState.factoryCount(name: "Sever Farm") >= 20
+                    return gameState.model.totalBitsEarned >= 2_500_000 && gameState.factoryCount(name: "Server Farm") >= 20
                 case "Scalable Storage Solutions":
-                    return gameState.model.totalBitsEarned >= 3_000_000 && gameState.factoryCount(name: "Sever Farm") >= 25
+                    return gameState.model.totalBitsEarned >= 3_000_000 && gameState.factoryCount(name: "Server Farm") >= 25
                 case "Parallel Processing Units":
                     return gameState.model.totalBitsEarned >= 10_000_000 && gameState.factoryCount(name: "Mainframe") >= 5
                 case "Enhanced Memory Architecture":
@@ -252,6 +252,222 @@ struct UpgradesList: View {
                     return gameState.model.totalBitsEarned >= 25_000_000 && gameState.factoryCount(name: "Mainframe") >= 20
                 case "Artificial Intelligence Integration":
                     return gameState.model.totalBitsEarned >= 30_000_000 && gameState.factoryCount(name: "Mainframe") >= 25
+                case "Enhanced Vector Units":
+                            return gameState.model.totalBitsEarned >= 50_000_000 && gameState.factoryCount(name: "Vector Processor") >= 5
+                        case "High-Bandwidth Memory":
+                            return gameState.model.totalBitsEarned >= 100_000_000 && gameState.factoryCount(name: "Vector Processor") >= 10
+                        case "Multi-Core Architecture":
+                            return gameState.model.totalBitsEarned >= 200_000_000 && gameState.factoryCount(name: "Vector Processor") >= 15
+                        case "Advanced Pipeline Optimization":
+                            return gameState.model.totalBitsEarned >= 400_000_000 && gameState.factoryCount(name: "Vector Processor") >= 20
+                        case "Quantum-Inspired Algorithms":
+                            return gameState.model.totalBitsEarned >= 800_000_000 && gameState.factoryCount(name: "Vector Processor") >= 25
+                        case "Enhanced Interconnect":
+                            return gameState.model.totalBitsEarned >= 500_000_000 && gameState.factoryCount(name: "Parallel Processing Array") >= 5
+                        case "Scalable Architecture":
+                            return gameState.model.totalBitsEarned >= 1_000_000_000 && gameState.factoryCount(name: "Parallel Processing Array") >= 10
+                        case "Heterogeneous Computing":
+                            return gameState.model.totalBitsEarned >= 2_000_000_000 && gameState.factoryCount(name: "Parallel Processing Array") >= 15
+                        case "Load Balancing Algorithms":
+                            return gameState.model.totalBitsEarned >= 4_000_000_000 && gameState.factoryCount(name: "Parallel Processing Array") >= 20
+                        case "Optical Interconnects":
+                            return gameState.model.totalBitsEarned >= 8_000_000_000 && gameState.factoryCount(name: "Parallel Processing Array") >= 25
+                        case "Advanced Neural Architecture":
+                            return gameState.model.totalBitsEarned >= 5_000_000_000 && gameState.factoryCount(name: "Neural Network Computer") >= 5
+                        case "Spiking Neural Networks":
+                            return gameState.model.totalBitsEarned >= 10_000_000_000 && gameState.factoryCount(name: "Neural Network Computer") >= 10
+                        case "Neuromorphic Hardware":
+                            return gameState.model.totalBitsEarned >= 20_000_000_000 && gameState.factoryCount(name: "Neural Network Computer") >= 15
+                        case "Adaptive Learning Algorithms":
+                            return gameState.model.totalBitsEarned >= 40_000_000_000 && gameState.factoryCount(name: "Neural Network Computer") >= 20
+                        case "Quantum-Enhanced Machine Learning":
+                            return gameState.model.totalBitsEarned >= 80_000_000_000 && gameState.factoryCount(name: "Neural Network Computer") >= 25
+                        case "Exascale Computing":
+                            return gameState.model.totalBitsEarned >= 50_000_000_000 && gameState.factoryCount(name: "Supercomputer") >= 5
+                        case "Advanced Cooling Systems":
+                            return gameState.model.totalBitsEarned >= 100_000_000_000 && gameState.factoryCount(name: "Supercomputer") >= 10
+                        case "3D Chip Stacking":
+                            return gameState.model.totalBitsEarned >= 200_000_000_000 && gameState.factoryCount(name: "Supercomputer") >= 15
+                        case "Photonic Computing":
+                            return gameState.model.totalBitsEarned >= 400_000_000_000 && gameState.factoryCount(name: "Supercomputer") >= 20
+                        case "Quantum-Classical Hybrid":
+                            return gameState.model.totalBitsEarned >= 800_000_000_000 && gameState.factoryCount(name: "Supercomputer") >= 25
+                    // Quantum Computer Upgrades
+                        case "Improved Qubit Coherence":
+                            return gameState.factoryCount(name: "Basic Quantum Computer") >= 1
+                        case "Enhanced Quantum Gates":
+                            return gameState.factoryCount(name: "Basic Quantum Computer") >= 5
+                        case "Quantum Error Correction":
+                            return gameState.factoryCount(name: "Basic Quantum Computer") >= 10
+                        case "Quantum Algorithm Optimization":
+                            return gameState.factoryCount(name: "Basic Quantum Computer") >= 15
+                        case "Scalable Qubit Architecture":
+                            return gameState.factoryCount(name: "Basic Quantum Computer") >= 20
+
+                        case "Enhanced Cooling System":
+                            return gameState.factoryCount(name: "Quantum Annealer") >= 1
+                        case "Improved Annealing Schedule":
+                            return gameState.factoryCount(name: "Quantum Annealer") >= 5
+                        case "Increased Qubit Connectivity":
+                            return gameState.factoryCount(name: "Quantum Annealer") >= 10
+                        case "Quantum Fluctuation Enhancement":
+                            return gameState.factoryCount(name: "Quantum Annealer") >= 15
+                        case "Hybrid Quantum-Classical Algorithms":
+                            return gameState.factoryCount(name: "Quantum Annealer") >= 20
+
+                        case "Enhanced Ion Traps":
+                            return gameState.factoryCount(name: "Trapped Ion Quantum Computer") >= 1
+                        case "Precision Laser Control":
+                            return gameState.factoryCount(name: "Trapped Ion Quantum Computer") >= 5
+                        case "Improved Decoherence Protection":
+                            return gameState.factoryCount(name: "Trapped Ion Quantum Computer") >= 10
+                        case "Multi-Species Ion Systems":
+                            return gameState.factoryCount(name: "Trapped Ion Quantum Computer") >= 15
+                        case "Modular Ion Trap Architecture":
+                            return gameState.factoryCount(name: "Trapped Ion Quantum Computer") >= 20
+
+                        case "Enhanced Flux Control":
+                            return gameState.factoryCount(name: "Superconducting Quantum Processor") >= 1
+                        case "Microwave Pulse Optimization":
+                            return gameState.factoryCount(name: "Superconducting Quantum Processor") >= 5
+                        case "Coherence Time Extension":
+                            return gameState.factoryCount(name: "Superconducting Quantum Processor") >= 10
+                        case "Multi-Level Qubit States":
+                            return gameState.factoryCount(name: "Superconducting Quantum Processor") >= 15
+                        case "3D Circuit Architecture":
+                            return gameState.factoryCount(name: "Superconducting Quantum Processor") >= 20
+
+                        case "Enhanced Braiding Operations":
+                            return gameState.factoryCount(name: "Topological Quantum System") >= 1
+                        case "Topological Error Suppression":
+                            return gameState.factoryCount(name: "Topological Quantum System") >= 5
+                        case "Exotic Anyonic States":
+                            return gameState.factoryCount(name: "Topological Quantum System") >= 10
+                        case "Multi-Layer Topological Circuits":
+                            return gameState.factoryCount(name: "Topological Quantum System") >= 15
+                        case "Topological Phase Transitions":
+                            return gameState.factoryCount(name: "Topological Quantum System") >= 20
+
+                        case "Surface Code Optimization":
+                            return gameState.factoryCount(name: "Quantum Error Correction Engine") >= 1
+                        case "Real-Time Error Tracking":
+                            return gameState.factoryCount(name: "Quantum Error Correction Engine") >= 5
+                        case "Adaptive Error Correction":
+                            return gameState.factoryCount(name: "Quantum Error Correction Engine") >= 10
+                        case "Multi-Level Error Encoding":
+                            return gameState.factoryCount(name: "Quantum Error Correction Engine") >= 15
+                        case "Hardware-Efficient Error Correction":
+                            return gameState.factoryCount(name: "Quantum Error Correction Engine") >= 20
+
+                        case "Quantum Repeater Enhancement":
+                            return gameState.factoryCount(name: "Quantum Network Node") >= 1
+                        case "Quantum Cryptography Protocols":
+                            return gameState.factoryCount(name: "Quantum Network Node") >= 5
+                        case "Multi-Node Entanglement":
+                            return gameState.factoryCount(name: "Quantum Network Node") >= 10
+                        case "Quantum-Classical Interface":
+                            return gameState.factoryCount(name: "Quantum Network Node") >= 15
+                        case "Global Quantum Network":
+                            return gameState.factoryCount(name: "Quantum Network Node") >= 20
+
+                        case "Expanded Qubit Array":
+                            return gameState.factoryCount(name: "Quantum Simulator Array") >= 1
+                        case "Advanced Lattice Configurations":
+                            return gameState.factoryCount(name: "Quantum Simulator Array") >= 5
+                        case "Quantum Dynamics Accelerator":
+                            return gameState.factoryCount(name: "Quantum Simulator Array") >= 10
+                        case "Tensor Network Coprocessor":
+                            return gameState.factoryCount(name: "Quantum Simulator Array") >= 15
+                        case "Holographic Quantum Simulation":
+                            return gameState.factoryCount(name: "Quantum Simulator Array") >= 20
+
+                        case "Advanced Error Correction":
+                            return gameState.factoryCount(name: "Universal Fault-Tolerant Quantum Computer") >= 1
+                        case "Topological Qubit Enhancement":
+                            return gameState.factoryCount(name: "Universal Fault-Tolerant Quantum Computer") >= 5
+                        case "Multi-Dimensional Quantum Gates":
+                            return gameState.factoryCount(name: "Universal Fault-Tolerant Quantum Computer") >= 10
+                        case "Quantum Circuit Optimization":
+                            return gameState.factoryCount(name: "Universal Fault-Tolerant Quantum Computer") >= 15
+                        case "Unlimited Coherence Time":
+                            return gameState.factoryCount(name: "Universal Fault-Tolerant Quantum Computer") >= 20
+
+                        case "Multiverse Tap":
+                            return gameState.factoryCount(name: "Quantum Multiverse Engine") >= 1
+                        case "Inter-Universe Coherence":
+                            return gameState.factoryCount(name: "Quantum Multiverse Engine") >= 5
+                        case "Multiverse Seal Capacitor":
+                            return gameState.factoryCount(name: "Quantum Multiverse Engine") >= 10
+                        case "Quantum Tornado Harmonizer":
+                            return gameState.factoryCount(name: "Quantum Multiverse Engine") >= 15
+                        case "Multiverse Hurricane Unleashed":
+                            return gameState.factoryCount(name: "Quantum Multiverse Engine") >= 20
+
+                        case "Quantum Cloud Expansion":
+                            return gameState.factoryCount(name: "Distributed Quantum Cloud") >= 1
+                        case "Quantum Teleportation Network":
+                            return gameState.factoryCount(name: "Distributed Quantum Cloud") >= 5
+                        case "Advanced Hybrid Quantum-Classical Algorithms":
+                            return gameState.factoryCount(name: "Distributed Quantum Cloud") >= 10
+                        case "Dynamic Resource Allocation":
+                            return gameState.factoryCount(name: "Distributed Quantum Cloud") >= 15
+                        case "Quantum Internet Protocol":
+                            return gameState.factoryCount(name: "Distributed Quantum Cloud") >= 20
+
+                        case "Quantum Neural Networks":
+                            return gameState.factoryCount(name: "Quantum AI Nexus") >= 1
+                        case "Quantum Tensor Processing":
+                            return gameState.factoryCount(name: "Quantum AI Nexus") >= 5
+                        case "Quantum Reinforcement Learning":
+                            return gameState.factoryCount(name: "Quantum AI Nexus") >= 10
+                        case "Quantum Semantic Networks":
+                            return gameState.factoryCount(name: "Quantum AI Nexus") >= 15
+                        case "Quantum Cognitive Architecture":
+                            return gameState.factoryCount(name: "Quantum AI Nexus") >= 20
+
+                        case "Expanded Hybrid Processing Units":
+                            return gameState.factoryCount(name: "Quantum-Classical Hybrid Megastructure") >= 1
+                        case "Quantum-Classical Interface Optimization":
+                            return gameState.factoryCount(name: "Quantum-Classical Hybrid Megastructure") >= 5
+                        case "Modular Quantum Expansion":
+                            return gameState.factoryCount(name: "Quantum-Classical Hybrid Megastructure") >= 10
+                        case "Neuromorphic Quantum Processors":
+                            return gameState.factoryCount(name: "Quantum-Classical Hybrid Megastructure") >= 15
+                        case "Exascale Quantum-Classical Integration":
+                            return gameState.factoryCount(name: "Quantum-Classical Hybrid Megastructure") >= 20
+
+                        case "Dimensional Resonance Tuning":
+                            return gameState.factoryCount(name: "Quantum Dimension Gateway") >= 1
+                        case "Multiversal Qubit Entanglement":
+                            return gameState.factoryCount(name: "Quantum Dimension Gateway") >= 5
+                        case "Hyperdimensional Quantum Circuits":
+                            return gameState.factoryCount(name: "Quantum Dimension Gateway") >= 10
+                        case "Quantum Dimension Stabilizers":
+                            return gameState.factoryCount(name: "Quantum Dimension Gateway") >= 15
+                        case "Dimension Harmony Resonator":
+                            return gameState.factoryCount(name: "Quantum Dimension Gateway") >= 20
+
+                        case "Stellar Qubit Array":
+                            return gameState.factoryCount(name: "Cosmic Quantum Computer") >= 1
+                        case "Galactic Entanglement Network":
+                            return gameState.factoryCount(name: "Cosmic Quantum Computer") >= 5
+                        case "Supernova Quantum Accelerator":
+                            return gameState.factoryCount(name: "Cosmic Quantum Computer") >= 10
+                        case "Black Hole Information Processor":
+                            return gameState.factoryCount(name: "Cosmic Quantum Computer") >= 15
+                        case "Universal Quantum Fabric Manipulator":
+                            return gameState.factoryCount(name: "Cosmic Quantum Computer") >= 20
+
+                        case "Planck Length Qubit Miniaturization":
+                            return gameState.factoryCount(name: "Planck-Scale Quantum Processor") >= 1
+                        case "Quantum Foam Stabilizer":
+                            return gameState.factoryCount(name: "Planck-Scale Quantum Processor") >= 5
+                        case "Quantum Gravity Integrator":
+                            return gameState.factoryCount(name: "Planck-Scale Quantum Processor") >= 10
+                        case "Spacetime Curvature Processor":
+                            return gameState.factoryCount(name: "Planck-Scale Quantum Processor") >= 15
+                        case "Unified Field Theory Computer":
+                            return gameState.factoryCount(name: "Planck-Scale Quantum Processor") >= 20
                 
 
                 case "Quantum Clicker":
@@ -321,11 +537,29 @@ struct FactoriesList: View {
     }
     
     var sortedFactories: [FactoryModel] {
-        let classicalFactories = gameState.model.factories.filter { $0.name != "Basic Quantum Computer" && $0.name != "Quantum Annealer" && $0.name != "Trapped Ion Quantum Computer" && $0.name != "Superconducting Quantum Processor" && $0.name != "Topological Quantum System" && $0.name != "Quantum Error Correction Engine" && $0.name != "Quantum Network Node" && $0.name != "Quantum Simulator Array" && $0.name != "Universal Fault-Tolerant Quantum Computer" && $0.name != "Quantum Multiverse Engine" && $0.name != "Distributed Quantum Cloud" && $0.name != "Quantum AI Nexus" && $0.name != "Quantum-Classical Hybrid Megastructure" && $0.name != "Quantum Dimension Gateway" && $0.name != "Cosmic Quantum Computer" && $0.name != "Planck-Scale Quantum Processor"}
+        let classicalFactories = gameState.model.factories.filter { factory in
+            !["Basic Quantum Computer", "Quantum Annealer", "Trapped Ion Quantum Computer",
+              "Superconducting Quantum Processor", "Topological Quantum System",
+              "Quantum Error Correction Engine", "Quantum Network Node", "Quantum Simulator Array",
+              "Universal Fault-Tolerant Quantum Computer", "Quantum Multiverse Engine",
+              "Distributed Quantum Cloud", "Quantum AI Nexus",
+              "Quantum-Classical Hybrid Megastructure", "Quantum Dimension Gateway",
+              "Cosmic Quantum Computer", "Planck-Scale Quantum Processor"].contains(factory.name)
+        }
         let sortedClassical = classicalFactories.sorted(by: { $0.initialCost < $1.initialCost })
         
-        if gameState.model.quantumUnlocked, let quantumComputer = gameState.model.factories.first(where: { $0.name == "Basic Quantum Computer" && $0.name == "Quantum Annealer" && $0.name == "Trapped Ion Quantum Computer" && $0.name == "Superconducting Quantum Processor" && $0.name == "Topological Quantum System" && $0.name == "Quantum Error Correction Engine" && $0.name == "Quantum Network Node" && $0.name == "Quantum Simulator Array" && $0.name == "Universal Fault-Tolerant Quantum Computer" && $0.name == "Quantum Multiverse Engine" && $0.name == "Distributed Quantum Cloud" && $0.name == "Quantum AI Nexus" && $0.name == "Quantum-Classical Hybrid Megastructure" && $0.name == "Quantum Dimension Gateway" && $0.name == "Cosmic Quantum Computer" && $0.name == "Planck-Scale Quantum Processor"}) {
-            return sortedClassical + [quantumComputer]
+        if gameState.model.quantumUnlocked {
+            let quantumFactories = gameState.model.factories.filter { factory in
+                ["Basic Quantum Computer", "Quantum Annealer", "Trapped Ion Quantum Computer",
+                 "Superconducting Quantum Processor", "Topological Quantum System",
+                 "Quantum Error Correction Engine", "Quantum Network Node", "Quantum Simulator Array",
+                 "Universal Fault-Tolerant Quantum Computer", "Quantum Multiverse Engine",
+                 "Distributed Quantum Cloud", "Quantum AI Nexus",
+                 "Quantum-Classical Hybrid Megastructure", "Quantum Dimension Gateway",
+                 "Cosmic Quantum Computer", "Planck-Scale Quantum Processor"].contains(factory.name)
+            }
+            let sortedQuantum = quantumFactories.sorted(by: { $0.initialCost < $1.initialCost })
+            return sortedClassical + sortedQuantum
         } else {
             return sortedClassical
         }

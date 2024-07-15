@@ -88,7 +88,7 @@ struct TopBar: View {
                 .font(.system(size: fontSize(for: screenSize, baseFontSize: 14, maxSize: 16), weight: .medium))
                 .foregroundColor(.white.opacity(0.8))
             Text("\(gameState.formatNumber(perSecond))/s")
-                .font(.system(size: fontSize(for: screenSize, baseFontSize: 12, maxSize: 14), weight: .regular))
+                .font(.system(size: fontSize(for: screenSize, baseFontSize: 20, maxSize: 30), weight: .regular))
                 .foregroundColor(.white.opacity(0.7))
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
