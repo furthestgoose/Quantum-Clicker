@@ -143,6 +143,30 @@ class GameState: ObservableObject {
                 UpgradeModel(icon: "memorychip", name: "RAM Expansion", cost: 50000, costResourceType: "Bits", description: "Increased memory capacity \nWorkstations are 2x faster", upgradeType: .factoryEfficiency("Workstation", 2)),
                 UpgradeModel(icon: "gamecontroller", name: "Graphics Accelerator", cost: 200000, costResourceType: "Bits", description: "Advanced GPU for improved processing \nWorkstations are 1.25x faster", upgradeType: .factoryEfficiency("Workstation", 1.25)),
                 UpgradeModel(icon: "network", name: "High-Speed Network Interface", cost: 1000000, costResourceType: "Bits", description: "Improved data transfer capabilities \nWorkstations are 1.5x faster", upgradeType: .factoryEfficiency("Workstation", 1.5)),
+                UpgradeModel(icon: "network", name: "Improved Bandwidth", cost: 500, costResourceType: "Bits", description: "Boost the bandwidth to handle more data \nMini Servers are 2x faster", upgradeType: .factoryEfficiency("Mini Server", 2)),
+                UpgradeModel(icon: "bolt", name: "Energy Efficiency", cost: 750, costResourceType: "Bits", description: "Make the current amount of energy used go further \nMini Servers are 50% faster", upgradeType: .factoryEfficiency("Mini Server", 1.5)),
+                UpgradeModel(icon: "fan", name: "Advanced Cooling System", cost: 2000, costResourceType: "Bits", description: "Install a superior cooling system to enhance performance. \nMini Servers are 75% faster", upgradeType: .factoryEfficiency("Mini Server", 1.75)),
+                UpgradeModel(icon: "externaldrive.badge.checkmark", name: "Data Compression", cost: 2000, costResourceType: "Bits", description: "Implement advanced data compression algorithms. \nMini Servers are 50% faster", upgradeType: .factoryEfficiency("Mini Server", 1.5)),
+                UpgradeModel(icon: "lock.shield", name: "Security Enhancements", cost: 2000, costResourceType: "Bits", description: "Enhance the server's security to minimize downtime, ensuring a stable bit generation rate. \nMini Servers are 3x faster", upgradeType: .factoryEfficiency("Mini Server", 3)),
+                UpgradeModel(icon: "cpu", name: "High Performance CPUs", cost: 10000, costResourceType: "Bits", description: "Install top-of-the-line processors \nServer Racks are 2x faster", upgradeType: .factoryEfficiency("Server Rack", 2)),
+                UpgradeModel(icon: "externaldrive.badge.plus", name: "Solid-State Drives", cost: 15000, costResourceType: "Bits", description: "Switch to SSDs for faster data access \nServer Racks are 50% faster", upgradeType: .factoryEfficiency("Server Rack", 1.5)),
+                UpgradeModel(icon: "sdcard", name: "Enhanced Network Interface Cards", cost: 20000, costResourceType: "Bits", description: "Install advanced NICs to optimize data transfer \nServer Racks are 75% faster", upgradeType: .factoryEfficiency("Server Rack", 1.75)),
+                UpgradeModel(icon: "bolt.batteryblock", name: "Power Distribution Unit Upgrade", cost: 25000, costResourceType: "Bits", description: "Enhance the power distribution system \nServer Racks are 2x faster", upgradeType: .factoryEfficiency("Server Rack", 2)),
+                UpgradeModel(icon: "platter.2.filled.iphone", name: "Redundant Array of Independent Disks", cost: 30_000, costResourceType: "Bits", description: "Set up RAID for better performance and reliability \nServer Racks are 3x faster", upgradeType: .factoryEfficiency("Server Rack", 3)),
+                UpgradeModel(icon: "hammer", name: "High-Performance Servers", cost: 100_000, costResourceType: "Bits", description: "Enhance the farm with top-tier servers \nServer Farms are 2x faster", upgradeType: .factoryEfficiency("Server Farm", 2)),
+                UpgradeModel(icon: "map", name: "Data Center Optimization", cost: 150_000, costResourceType: "Bits", description: "Optimize data center operations for better efficiency \nServer Farms are 50% faster", upgradeType: .factoryEfficiency("Server Farm", 1.5)),
+                UpgradeModel(icon: "bolt.ring.closed", name: "Enhanced Power Supply", cost: 200_000, costResourceType: "Bits", description: "Ensure uninterrupted performance with an advanced power supply \nServer Farms are 75% faster", upgradeType: .factoryEfficiency("Server Farm", 1.75)),
+                UpgradeModel(icon: "hand.point.up.braille.fill", name: "AI-Driven Maintenance", cost: 250_000, costResourceType: "Bits", description: "Use AI to anticipate and resolve issues proactively \nServer Farms are 2x faster", upgradeType: .factoryEfficiency("Server Farm", 2)),
+                UpgradeModel(icon: "shippingbox.fill", name: "Scalable Storage Solutions", cost: 300_000, costResourceType: "Bits", description: "Adopt scalable storage technologies for improved data handling \nServer Farms are 3x faster", upgradeType: .factoryEfficiency("Server Farm", 3)),
+                UpgradeModel(icon: "square.and.line.vertical.and.square", name: "Parallel Processing Units", cost: 1_000_000, costResourceType: "Bits", description: "Integrate advanced parallel processing units \nMainframes are 2x faster", upgradeType: .factoryEfficiency("Mainframe", 2)),
+                UpgradeModel(icon: "square.grid.3x1.below.line.grid.1x2", name: "Enhanced Memory Architecture", cost: 1_500_000, costResourceType: "Bits", description: "Revamp the memory architecture to boost data handling efficiency \nMainframes are 50% faster", upgradeType: .factoryEfficiency("Mainframe", 1.5)),
+                UpgradeModel(icon: "air.conditioner.vertical", name: "Advanced Cooling Solutions", cost: 2_000_000, costResourceType: "Bits", description: "Install an advanced cooling system to maintain optimal performance \nMainframes are 75% faster", upgradeType: .factoryEfficiency("Mainframe", 1.75)),
+                UpgradeModel(icon: "bus", name: "High-Speed Data Bus", cost: 2_500_000, costResourceType: "Bits", description: "Upgrade the data bus for rapid internal communication \nMainframes are 2x faster", upgradeType: .factoryEfficiency("Mainframe", 2)),
+                UpgradeModel(icon: "brain.filled.head.profile", name: "Artificial Intelligence Integration", cost: 3_000_000, costResourceType: "Bits", description: "Incorporate AI to optimize data processing \nMainframes are 3x faster", upgradeType: .factoryEfficiency("Mainframe", 3)),
+                
+
+
+
                 UpgradeModel(icon: "testtube.2", name: "Quantum Research Lab", cost: 10000000000, costResourceType: "Bits", description: "Unlocks the Quantum Era", upgradeType: .unlockResource("Qubits"))
             ]
         }
@@ -155,6 +179,7 @@ class GameState: ObservableObject {
                 FactoryModel(icon: "server.rack", name: "Server Rack", cost: 20000, costResourceType: "Bits", count: 0, OverView: "A small cluster of servers for increased computing power. \nGenerates \(formatNumber(10 * model.prestigeMultiplier)) bits per second", baseOutput: 10),
                 FactoryModel(icon: "cloud", name: "Server Farm", cost: 200000, costResourceType: "Bits", count: 0, OverView: "A collection of server racks working in unison for increased processing power \nGenerates \(formatNumber(50 * model.prestigeMultiplier)) bits per second", baseOutput: 50),
                 FactoryModel(icon: "cpu", name: "Mainframe", cost: 2000000, costResourceType: "Bits", count: 0, OverView: "A large, powerful computer system capable of handling multiple complex tasks simultaneously \nGenerates \(formatNumber(250 * model.prestigeMultiplier)) bits per second", baseOutput: 250),
+                // MARK: - All below still need an upgrade set
                 FactoryModel(icon: "memorychip", name: "Vector Processor", cost: 20000000, costResourceType: "Bits", count: 0, OverView: "Specialized high-performance computer optimized for scientific and graphical calculations \nGenerates \(formatNumber(1000 * model.prestigeMultiplier)) bits per second", baseOutput: 1000),
                 FactoryModel(icon: "waveform.path.ecg", name: "Parallel Processing Array", cost: 200000000, costResourceType: "Bits", count: 0, OverView: "A system of interconnected processors working on shared tasks \nGenerates \(formatNumber(5000 * model.prestigeMultiplier)) bits per second", baseOutput: 5000),
                 FactoryModel(icon: "brain", name: "Neural Network Computer", cost: 2000000000, costResourceType: "Bits", count: 0, OverView: "Advanced system mimicking brain structure for complex pattern recognition \nGenerates \(formatNumber(25000 * model.prestigeMultiplier)) bits per second", baseOutput: 25000),
@@ -192,6 +217,7 @@ class GameState: ObservableObject {
                 PrestigeUpgradeModel(icon: "cpu", name: "Computer Efficiency", description: "All Computers produce 25% more bits", cost: 7),
                 PrestigeUpgradeModel(icon: "hourglass", name: "Offline Progress", description: "Increase offline production efficiency to 75%", cost: 8),
                 PrestigeUpgradeModel(icon: "dollarsign.circle", name: "Cost Reduction", description: "Reduce all Computer costs by 10%", cost: 10),
+                PrestigeUpgradeModel(icon: "memorychip", name: "Quantum Memory", description: "Start with 10 Qubits after prestige", cost: 15),
             ]
         }
     
@@ -309,6 +335,10 @@ class GameState: ObservableObject {
             case "Cost Reduction":
                 for i in 0..<model.factories.count {
                     model.factories[i].cost *= 0.9
+                }
+            case "Quantum Memory":
+                if let QubitsIndex = model.resources.firstIndex(where: { $0.name == "Qubits" }) {
+                    model.resources[QubitsIndex].amount += 10
                 }
             default:
                 break

@@ -5,7 +5,6 @@ quantum clicker is an idle game I'm currently developing.
 ## To Do
 - add upgrades for each classical factory (only 2 have an upgrade set currently)
 - add upgrades for each quantum factory
-- ensure app works accross all screen sizes
 - test for bugs
 - make release website
 

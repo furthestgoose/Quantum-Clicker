@@ -201,9 +201,9 @@ struct UpgradesList: View {
                 case "CPU Upgrade":
                     return gameState.factoryCount(name: "Personal Computer") >= 1
                 case "Cooling System Upgrade":
-                    return gameState.factoryCount(name: "Personal Computer") >= 1
+                    return gameState.factoryCount(name: "Personal Computer") >= 10
                 case "Storage Upgrade":
-                    return gameState.factoryCount(name: "Personal Computer") >= 1
+                    return gameState.factoryCount(name: "Personal Computer") >= 15
                 case "Processor Overclock":
                     return gameState.factoryCount(name: "Workstation") >= 10
                 case "RAM Expansion":
@@ -212,6 +212,48 @@ struct UpgradesList: View {
                     return gameState.factoryCount(name: "Workstation") >= 50
                 case "High-Speed Network Interface":
                     return gameState.factoryCount(name: "Workstation") >= 100
+                case "Improved Bandwidth":
+                    return gameState.model.totalBitsEarned >= 25000
+                case "Energy Efficiency":
+                    return gameState.factoryCount(name: "Mini Server") >= 5
+                case "Advanced Cooling System":
+                    return gameState.factoryCount(name: "Mini Server") >= 10 && gameState.model.totalBitsEarned >= 50000
+                case "Data Compression":
+                    return gameState.factoryCount(name: "Mini Server") >= 15 && gameState.model.totalBitsEarned >= 100_000
+                case "Security Enhancements":
+                    return gameState.factoryCount(name: "Mini Server") >= 20 && gameState.model.totalBitsEarned >= 150_000
+                case "High-Performance CPUs":
+                    return gameState.model.totalBitsEarned >= 100_000 && gameState.factoryCount(name: "Sever Rack") >= 5
+                case "Solid-State Drives":
+                    return gameState.model.totalBitsEarned >= 150_000 && gameState.factoryCount(name: "Sever Rack") >= 10
+                case "Enhanced Network Interface Cards":
+                    return gameState.model.totalBitsEarned >= 200_000 && gameState.factoryCount(name: "Sever Rack") >= 15
+                case "Power Distribution Unit Upgrade":
+                    return gameState.model.totalBitsEarned >= 250_000 && gameState.factoryCount(name: "Sever Rack") >= 20
+                case "Redundant Array of Independent Disks":
+                    return gameState.model.totalBitsEarned >= 300_000 && gameState.factoryCount(name: "Sever Rack") >= 25
+                case "High-Performance Servers":
+                    return gameState.model.totalBitsEarned >= 1_000_000 && gameState.factoryCount(name: "Sever Farm") >= 5
+                case "Data Center Optimization":
+                    return gameState.model.totalBitsEarned >= 1_500_000 && gameState.factoryCount(name: "Sever Farm") >= 10
+                case "Enhanced Power Supply":
+                    return gameState.model.totalBitsEarned >= 2_000_000 && gameState.factoryCount(name: "Sever Farm") >= 15
+                case "AI-Driven Maintenance":
+                    return gameState.model.totalBitsEarned >= 2_500_000 && gameState.factoryCount(name: "Sever Farm") >= 20
+                case "Scalable Storage Solutions":
+                    return gameState.model.totalBitsEarned >= 3_000_000 && gameState.factoryCount(name: "Sever Farm") >= 25
+                case "Parallel Processing Units":
+                    return gameState.model.totalBitsEarned >= 10_000_000 && gameState.factoryCount(name: "Mainframe") >= 5
+                case "Enhanced Memory Architecture":
+                    return gameState.model.totalBitsEarned >= 15_000_000 && gameState.factoryCount(name: "Mainframe") >= 10
+                case "Advanced Cooling Solutions":
+                    return gameState.model.totalBitsEarned >= 20_000_000 && gameState.factoryCount(name: "Mainframe") >= 15
+                case "High-Speed Data Bus":
+                    return gameState.model.totalBitsEarned >= 25_000_000 && gameState.factoryCount(name: "Mainframe") >= 20
+                case "Artificial Intelligence Integration":
+                    return gameState.model.totalBitsEarned >= 30_000_000 && gameState.factoryCount(name: "Mainframe") >= 25
+                
+
                 case "Quantum Clicker":
                     return gameState.model.quantumUnlocked
                 default:
