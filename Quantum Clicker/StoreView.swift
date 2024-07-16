@@ -105,13 +105,15 @@ struct StoreTopBar: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 HStack(spacing: 4) {
-                    Text(label)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.white.opacity(0.8))
-                    if showPerSec{
-                        Text("\(gameState.formatNumber(perSecond))/s")
-                            .font(.system(size: 10, weight: .regular))
-                            .foregroundColor(.white.opacity(0.7))
+                    VStack{
+                        Text(label)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.white.opacity(0.8))
+                        if showPerSec{
+                            Text("\(gameState.formatNumber(perSecond))/s")
+                                .font(.system(size: 10, weight: .regular))
+                                .foregroundColor(.white.opacity(0.7))
+                        }
                     }
                 }
             }
@@ -196,6 +198,24 @@ struct UpgradesList: View {
     private var filteredUpgrades: [UpgradeModel] {
             sortedUpgrades.filter { upgrade in
                 switch upgrade.name {
+                case "Quantum Firewall":
+                    return gameState.model.quantumUnlocked
+                case "Quantum Inspiration":
+                    return gameState.model.quantumUnlocked
+                case "Hypercube Compression":
+                    return gameState.model.quantumUnlocked
+                case "Quantum Internet":
+                    return gameState.model.quantumUnlocked
+                case "Qubit Amplifier":
+                    return gameState.model.quantumUnlocked
+                case "Quantum Wave Generator":
+                    return gameState.model.quantumUnlocked
+                case "Qubit Matrix":
+                    return gameState.model.quantumUnlocked
+                case "Quantum Stack":
+                    return gameState.model.quantumUnlocked
+                case "Quantum Algorithm":
+                    return gameState.model.quantumUnlocked
                 case "RAM Upgrade":
                     return gameState.model.personalComputerUnlocked
                 case "CPU Upgrade":
@@ -303,6 +323,17 @@ struct UpgradesList: View {
                             return gameState.factoryCount(name: "Basic Quantum Computer") >= 15
                         case "Scalable Qubit Architecture":
                             return gameState.factoryCount(name: "Basic Quantum Computer") >= 20
+                    
+                    case "Multi-Qubit Entanglement":
+                        return gameState.factoryCount(name: "Advanced Quantum Workstation") >= 1
+                case "Quantum Gate Fidelity Boost":
+                    return gameState.factoryCount(name: "Advanced Quantum Workstation") >= 5
+                case "Basic Error Correction":
+                    return gameState.factoryCount(name: "Advanced Quantum Workstation") >= 10
+                case "Quantum-Classical Hybrid Algorithms":
+                    return gameState.factoryCount(name: "Advanced Quantum Workstation") >= 15
+                case "Quantum Network Integration":
+                    return gameState.factoryCount(name: "Advanced Quantum Workstation") >= 20
 
                         case "Enhanced Cooling System":
                             return gameState.factoryCount(name: "Quantum Annealer") >= 1
